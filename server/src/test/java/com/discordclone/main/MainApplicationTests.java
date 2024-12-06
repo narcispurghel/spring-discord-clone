@@ -1,4 +1,4 @@
-package com.discordclone.server;
+package com.discordclone.main;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
