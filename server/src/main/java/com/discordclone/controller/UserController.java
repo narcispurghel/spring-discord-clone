@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/api/users")
+@CrossOrigin(origins = "http://localhost:4200", allowCredentials = "true")
 public class UserController {
 
     @Autowired
@@ -24,7 +24,7 @@ public class UserController {
     }
 
     // Create a new user
-    @PostMapping
+    @PostMapping("/api/auth/register")
     public ResponseEntity<User> createUser(@RequestBody User user) {
         User savedUser = userService.createUser(user);
         return new ResponseEntity<>(savedUser, HttpStatus.CREATED);
