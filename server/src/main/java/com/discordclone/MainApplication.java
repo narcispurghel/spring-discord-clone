@@ -1,4 +1,4 @@
-package com.discordclone.server;
+package com.discordclone;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
