@@ -4,7 +4,6 @@ import io.imagekit.sdk.ImageKit;
 import io.imagekit.sdk.config.Configuration;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
 import java.util.Map;
 
 @Service
@@ -22,8 +21,6 @@ public class ImageKitService {
     }
 
     private void configureImageKit() {
-
-
         Configuration config = new Configuration(PUBLIC_KEY, PRIVATE_KEY, URL_ENDPOINT);
         imageKit.setConfig(config);
     }
