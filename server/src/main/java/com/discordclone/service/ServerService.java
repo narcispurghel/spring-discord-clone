@@ -26,8 +26,8 @@ public class ServerService {
 
         if (existingServer.isPresent()) {
             Server server = existingServer.get();
-            server.setName(updatedServer.getName());
-            server.setImage(updatedServer.getImage());
+            server.setServerName(updatedServer.getServerName());
+            server.setServerImage(updatedServer.getServerImage());
             return Optional.of(serverRepository.save(server));
         }
 

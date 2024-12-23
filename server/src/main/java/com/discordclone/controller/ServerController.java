@@ -15,7 +15,7 @@ public class ServerController {
     @Autowired
     private ServerService serverService;
 
-    @GetMapping("/server")
+    @PostMapping("/servers")
     public ResponseEntity<Server> createServer(@RequestBody Server server) {
         Server savedServer = serverService.createServer(server);
         return new ResponseEntity<>(savedServer, HttpStatus.CREATED);
