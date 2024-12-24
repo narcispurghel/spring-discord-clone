@@ -2,11 +2,11 @@ package com.discordclone.repository;
 
 import com.discordclone.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
 
-@CrossOrigin
+@Repository
 public interface UserRepository extends JpaRepository<User, Long> {
     Optional<User> findByEmail(String email);
 }
