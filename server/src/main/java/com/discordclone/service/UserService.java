@@ -24,13 +24,18 @@ public class UserService {
         return userRepository.findById(id);
     }
 
+    public Optional<User> getUserByEmail(String email) {
+        return userRepository.findByEmail(email);
+    }
+
+
     // Update an existing user
     public Optional<User> updateUser(Long id, User updatedUser) {
         Optional<User> existingUser = userRepository.findById(id);
         if (existingUser.isPresent()) {
             User user = existingUser.get();
-            user.setUsername(updatedUser.getUsername());
-            user.setEmail(updatedUser.getEmail());
+            user.setFullName(updatedUser.getFullName());
+            user.setEmail(updatedUser.getUsername());
             user.setPassword(updatedUser.getPassword());
             return Optional.of(userRepository.save(user));
         }

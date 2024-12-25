@@ -12,8 +12,8 @@ public class Server {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String name;
-    private String image;
+    private String serverName;
+    private String serverImage;
 
     // Getters and setters
     public Long getId() {
@@ -24,19 +24,19 @@ public class Server {
         this.id = id;
     }
 
-    public String getName() {
-        return name;
+    public String getServerName() {
+        return serverName;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setServerName(String serverName) {
+        this.serverName = serverName;
     }
 
-    public String getImage() {
-        return image;
+    public String getServerImage() {
+        return serverImage;
     }
 
-    public void setImage(String image) {
-        this.image = image;
+    public void setServerImage(String serverImage) {
+        this.serverImage = serverImage;
     }
 }

@@ -1,7 +1,9 @@
 package com.discordclone.controller;
 
 import com.discordclone.model.User;
+import com.discordclone.model.UserLogin;
 import com.discordclone.service.UserService;
+import org.apache.coyote.Request;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -28,6 +30,10 @@ public class UserController {
     public ResponseEntity<User> createUser(@RequestBody User user) {
         User savedUser = userService.createUser(user);
         return new ResponseEntity<>(savedUser, HttpStatus.CREATED);
+    }
+    @PostMapping("/api/auth/login")
+    public Optional<User> loginUser(@RequestBody UserLogin userLogin) {
+        return userService.getUserByEmail(userLogin.getUsername());
     }
 
     // Get user by ID
