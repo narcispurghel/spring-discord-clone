@@ -1,7 +1,0 @@
-@if (isLoading$ | async) {
-  <app-loading-spinner size="large" center />
-} @else {
-  @if ((servers$ | async)?.length) {
-    <app-layout />
-  }
-}
