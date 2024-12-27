@@ -1,0 +1,49 @@
+<app-modal>
+  <app-modal-title>{{
+    (server ? 'content.edit-your-server' : 'content.create-your-server')
+      | translate
+  }}</app-modal-title>
+  <app-modal-subtitle>{{
+    'content.create-server-subtitle' | translate
+  }}</app-modal-subtitle>
+  <app-modal-body>
+    <form [formGroup]="form" class="flex flex-col gap-5 py-2">
+      <app-image-upload
+        class="h-56 w-full self-center"
+        [folder]="iKitFolders.SERVER"
+        [value]="serverImageValue"
+        (onUploaded)="onServerImageUploaded($event)"
+      />
+      @if (hasError('serverImage')) {
+        <mat-hint class="text-red-500">{{
+          'content.a-server-image-is-required' | translate
+        }}</mat-hint>
+      }
+      <mat-form-field class="w-full">
+        <mat-label>{{ 'content.server-name' | translate }}</mat-label>
+        <input
+          matInput
+          placeholder="{{ 'content.enter-server-name' | translate }}"
+          formControlName="serverName"
+        />
+        @if (hasError('serverName')) {
+          <mat-hint class="text-red-500">{{
+            'content.a-server-name-is-required' | translate
+          }}</mat-hint>
+        }
+      </mat-form-field>
+    </form>
+  </app-modal-body>
+  <app-modal-footer>
+    <div class="flex justify-end">
+      <button
+        appButton
+        (click)="onSubmit()"
+        [isLoading]="isLoading$ | async"
+        class="w-full sm:w-auto"
+      >
+        {{ (server ? 'content.edit' : 'content.create') | translate }}
+      </button>
+    </div>
+  </app-modal-footer>
+</app-modal>

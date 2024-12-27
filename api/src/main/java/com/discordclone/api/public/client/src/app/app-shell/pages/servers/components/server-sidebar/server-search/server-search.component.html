@@ -1,0 +1,18 @@
+<button
+  (click)="openSearchModal()"
+  class="group flex w-full items-center gap-x-2 rounded-md px-2 py-2 transition hover:bg-zinc-700/10 dark:hover:bg-zinc-700/50"
+>
+  <mat-icon class="mdi-medium text-zinc-500 dark:text-zinc-400"
+    >search</mat-icon
+  >
+  <p
+    class="text-base font-medium text-zinc-500 transition group-hover:text-zinc-600 dark:text-zinc-400 dark:group-hover:text-zinc-300"
+  >
+    {{ 'content.search' | translate }}
+  </p>
+  <kbd
+    class="pointer-events-none ml-auto inline-flex h-4 select-none items-center gap-1 rounded bg-slate-900 px-1.5 py-1 font-mono text-[10px] font-medium text-white"
+  >
+    <span class="text-xs">{{ OS() === 'mac' ? '⌘' : 'Ctrl' }} + K</span>
+  </kbd>
+</button>

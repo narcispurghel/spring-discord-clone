@@ -1,0 +1,86 @@
+<div
+  class="text-primary flex h-screen w-full flex-col bg-[#F2F3F5] dark:bg-[#2B2D31]"
+>
+  <app-server-header [server]="server" [role]="role" />
+  <div class="px-3 py-2">
+    <app-server-search
+      class="mt-2"
+      [data]="data.searchData"
+      [serverId]="server.id"
+    />
+  </div>
+  <mat-divider class="h-[2px] bg-zinc-300 dark:bg-zinc-700 w-11/12 self-center" />
+  <div class="flex-1 overflow-y-auto px-3">
+    @if (data.textChannels.length) {
+      <app-server-section
+        class="mb-2 block"
+        labelKey="content.text-channels"
+        sectionType="channel"
+        [channelType]="channelTypes.TEXT"
+        [role]="role"
+      />
+      <div class="space-y-[2px]">
+        @for (channel of data.textChannels; track channel.id) {
+          <app-server-channel
+            [channel]="channel"
+            [server]="server"
+            [role]="role"
+          />
+        }
+      </div>
+    }
+
+    @if (data.audioChannels.length) {
+      <app-server-section
+        class="mb-2 block"
+        labelKey="content.voice-channels"
+        sectionType="channel"
+        [channelType]="channelTypes.AUDIO"
+        [role]="role"
+      />
+      <div class="space-y-[2px]">
+        @for (channel of data.audioChannels; track channel.id) {
+          <app-server-channel
+            [channel]="channel"
+            [server]="server"
+            [role]="role"
+          />
+        }
+      </div>
+    }
+
+    @if (data.videoChannels.length) {
+      <app-server-section
+        class="mb-2 block"
+        labelKey="content.video-channels"
+        sectionType="channel"
+        [channelType]="channelTypes.VIDEO"
+        [role]="role"
+      />
+      <div class="space-y-[2px]">
+        @for (channel of data.videoChannels; track channel.id) {
+          <app-server-channel
+            [channel]="channel"
+            [server]="server"
+            [role]="role"
+          />
+        }
+      </div>
+    }
+
+    @if (data.members.length) {
+      <app-server-section
+        class="mb-2 block"
+        labelKey="content.members"
+        sectionType="member"
+        [role]="role"
+      />
+
+      <div class="space-y-[2px]">
+        @for (member of data.members; track member.id) {
+          <app-server-member [member]="member" [server]="server" />
+        }
+      </div>
+    }
+  </div>
+</div>
