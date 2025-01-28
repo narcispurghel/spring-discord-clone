@@ -1,0 +1,20 @@
+<button
+  (click)="onClick()"
+  class="group relative flex items-center"
+  [matTooltip]="name"
+  matTooltipPosition="right"
+>
+  <div
+    class="absolute left-0 w-[4px] rounded-r-full bg-white transition-all"
+    [ngClass]="{ 'group-hover:h-[20px]': activeStoreId !== id }"
+    [ngClass]="activeStoreId === id ? 'h-[36px]' : 'h-[8px]'"
+  ></div>
+  <div
+    class="group relative mx-3 flex h-12 w-12 overflow-hidden rounded-3xl transition-all group-hover:rounded-2xl"
+    [ngClass]="{
+      'bg-primary/10 text-primary rounded-2xl': activeStoreId === id
+    }"
+  >
+    <img [ngSrc]="imageUrl" width="48" height="48" alt="Channel {{ name }}" />
+  </div>
+</button>

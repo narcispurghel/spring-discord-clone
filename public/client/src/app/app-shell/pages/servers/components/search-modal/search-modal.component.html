@@ -1,0 +1,36 @@
+<div
+  class="md:[w-500px] flex w-[250px] flex-col rounded-lg bg-[#0C0A09] sm:w-[350px] md:w-[550px] lg:w-[600px]"
+>
+  <div class="flex items-center px-4 py-3">
+    <mat-icon class="mdi-large text-zinc-300 dark:text-zinc-400"
+      >search</mat-icon
+    >
+    <input
+      class="w-[150px] border-none bg-transparent px-2 text-zinc-300 placeholder-zinc-300 outline-none ring-0 focus:ring-0 dark:text-zinc-400 dark:placeholder:text-zinc-400 sm:flex-1"
+      [formControl]="control"
+      [placeholder]="'content.search-all-channels-and-members' | translate"
+    />
+    <mat-icon
+      class="mdi-medium cursor-pointer text-zinc-300 hover:opacity-70 dark:text-zinc-400"
+      (click)="closeDialog()"
+      >close</mat-icon
+    >
+  </div>
+  <mat-divider class="bg-zinc-300 dark:bg-zinc-700" />
+  <div class="px-4 py-3">
+    <div class="flex max-h-[350px] flex-col gap-2 overflow-y-auto">
+      @for (item of filteredItems(); track item.labelKey) {
+        <app-search-item
+          *ngIf="item.data?.length"
+          (click)="closeDialogAndSidenav()"
+          [data]="item"
+          [serverId]="serverId"
+        />
+      } @empty {
+        <p class="py-5 text-center text-white">
+          {{ 'content.no-results-found' | translate }}
+        </p>
+      }
+    </div>
+  </div>
+</div>
