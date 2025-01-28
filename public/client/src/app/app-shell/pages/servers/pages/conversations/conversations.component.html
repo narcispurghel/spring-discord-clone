@@ -1,0 +1,12 @@
+@if (otherMemberProfile$ | async; as member) {
+  <div class="flex h-full flex-col">
+    <app-chat-header
+      type="conversation"
+      [name]="member.profile.name"
+      [profile]="member.profile"
+      [serverId]="(serverId$ | async) || ''"
+    />
+    <!-- <app-chat-messages class="flex-grow" /> -->
+    <app-chat-input [name]="member.profile.name" type="conversation" />
+  </div>
+}

@@ -1,0 +1,35 @@
+@if (value) {
+  <div class="flex h-full items-center justify-center">
+    <div class="relative h-28 w-28">
+      <img [src]="value" alt="Upload" class="rounded-full w-full h-full" />
+      <button
+        (click)="onUploaded.emit(null)"
+        class="absolute right-0 top-0 flex h-7 w-7 items-center justify-center rounded-full bg-rose-500 text-white shadow-sm"
+        type="button"
+      >
+        <mat-icon class="mdi-small">close</mat-icon>
+      </button>
+    </div>
+  </div>
+} @else {
+  <label
+    for="image-upload-input"
+    class="bg-background hover:bg-accent hover:text-accent-foreground min-h-10 flex h-full w-full cursor-pointer flex-col items-center justify-center whitespace-nowrap rounded-md border-[2px] px-4 py-2 transition hover:border-blue-500 hover:text-blue-500"
+    [ngClass]="{ 'pointer-events-none animate-pulse': isLoading$ | async }"
+  >
+    <div class="flex flex-col items-center justify-center">
+      <mat-icon>cloud_upload</mat-icon>
+      @if (isLoading$ | async) {
+        {{ 'content.uploading' | translate }}...
+      } @else {
+        {{ 'content.upload-an-image' | translate }}
+      }
+    </div>
+  </label>
+  <input
+    id="image-upload-input"
+    type="file"
+    class="hidden"
+    (change)="onUpload($event)"
+  />
+}

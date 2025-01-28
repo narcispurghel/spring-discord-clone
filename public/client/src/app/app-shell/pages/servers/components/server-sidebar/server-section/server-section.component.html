@@ -1,0 +1,27 @@
+<div class="flex items-center justify-between py-2">
+  <p class="text-xs font-medium uppercase text-zinc-500 dark:text-zinc-400">
+    {{ labelKey | translate }}
+  </p>
+
+  @if (role !== roles.GUEST && sectionType === 'channel') {
+    <button
+      (click)="onCreateChannel()"
+      [matTooltip]="'content.create-channel' | translate"
+      matTooltipPosition="above"
+      class="text-zinc-500 transition hover:text-zinc-600 dark:text-zinc-400 dark:hover:text-zinc-300"
+    >
+      <mat-icon>add</mat-icon>
+    </button>
+  }
+
+  @if (role === roles.ADMIN && sectionType === 'member') {
+    <button
+      (click)="onManageMembers()"
+      [matTooltip]="'content.manage-members' | translate"
+      matTooltipPosition="above"
+      class="text-zinc-500 transition hover:text-zinc-600 dark:text-zinc-400 dark:hover:text-zinc-300"
+    >
+      <mat-icon class="mdi-medium">settings</mat-icon>
+    </button>
+  }
+</div>
