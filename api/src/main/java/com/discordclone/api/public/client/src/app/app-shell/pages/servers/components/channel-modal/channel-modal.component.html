@@ -1,0 +1,54 @@
+<app-modal>
+  <app-modal-title>{{
+    (isEditMode ? 'content.edit-channel' : 'content.create-channel') | translate
+  }}</app-modal-title>
+  <app-modal-body>
+    <form class="flex flex-col gap-4" [formGroup]="form">
+      <mat-form-field class="w-full">
+        <mat-label>{{ 'content.channel-name' | translate }}</mat-label>
+        <input
+          matInput
+          placeholder="{{ 'content.enter-channel-name' | translate }}"
+          formControlName="channelName"
+        />
+        @if (hasError('channelName')) {
+          <mat-hint class="text-red-500">{{
+            mapError('channelName')
+          }}</mat-hint>
+        }
+      </mat-form-field>
+
+      <mat-form-field class="w-full">
+        <mat-label>{{ 'content.channel-type' | translate }}</mat-label>
+        <mat-select formControlName="channelType">
+          @for (chKeyValue of channelTypes | keyvalue; track chKeyValue.value) {
+            <mat-option [value]="chKeyValue.value">{{
+              'content.' +
+                (((chKeyValue.value | lowercase) === 'audio'
+                  ? 'voice'
+                  : chKeyValue.value
+                ) | lowercase) | translate
+            }}</mat-option>
+          }
+        </mat-select>
+        @if (hasError('channelType')) {
+          <mat-hint class="text-red-500">{{
+            'validators.a-channel-type-is-required' | translate
+          }}</mat-hint>
+        }
+      </mat-form-field>
+    </form>
+  </app-modal-body>
+  <app-modal-footer>
+    <div class="flex justify-end">
+      <button
+        appButton
+        (click)="onSubmit()"
+        [isLoading]="isLoading$ | async"
+        class="w-full sm:w-auto"
+      >
+        {{ (isEditMode ? 'content.edit' : 'content.create') | translate }}
+      </button>
+    </div>
+  </app-modal-footer>
+</app-modal>

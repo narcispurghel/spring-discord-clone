@@ -1,0 +1,108 @@
+<app-modal *ngIf="server$ | async as server" [showActions]="false">
+  <app-modal-title>{{ 'content.manage-members' | translate }}</app-modal-title>
+  <app-modal-subtitle
+    >{{ server.members.length }}
+    {{
+      (server.members.length === 1 ? 'content.member' : 'content.members')
+        | translate
+    }}</app-modal-subtitle
+  >
+  <app-modal-body>
+    <div class="mt-8 max-h-[420px] overflow-y-auto pr-6">
+      @for (member of server.members; track member.id) {
+        <div class="mb-6 flex items-center gap-x-2">
+          <app-user-avatar [user]="member.profile" />
+          <div class="flex flex-col gap-y-1">
+            <div class="items-enter flex text-sm font-semibold">
+              {{ member.profile.name }}
+              @if (roleIconMap[member.role]; as roleMap) {
+                <mat-icon [class]="roleMap.class">{{
+                  roleMap.iconType
+                }}</mat-icon>
+              }
+            </div>
+            <p class="text-xs text-zinc-500">{{ member.profile.email }}</p>
+          </div>
+          @if (
+            (isLoading$ | async) === false &&
+            server.profileId !== member.profileId &&
+            loadingId() !== member.id
+          ) {
+            <mat-icon
+              #menuTrigger="matMenuTrigger"
+              [matMenuTriggerFor]="menu"
+              class="ml-auto cursor-pointer text-zinc-500"
+              >more_vert</mat-icon
+            >
+            <mat-menu
+              #menu="matMenu"
+              class="test2020 !rounded-lg p-2 text-xs font-medium text-black dark:!bg-black dark:text-neutral-400"
+              xPosition="before"
+            >
+              <div class="flex flex-col gap-1">
+                <button
+                  class="flex w-40 items-center rounded-lg p-2 text-white hover:bg-black/20 dark:!text-white dark:hover:!bg-white/20"
+                  [matMenuTriggerFor]="roleMenu"
+                  #roleMenuTrigger="matMenuTrigger"
+                  (click)="toggleRoleMenu($event, roleMenuTrigger)"
+                >
+                  <mat-icon class="mr-4 text-white dark:!text-white"
+                    >security</mat-icon
+                  >
+                  <span class="">{{ 'content.role' | translate }}</span>
+                  <mat-icon class="ml-auto text-white dark:!text-white">{{
+                    roleMenuTrigger.menuOpen ? 'expand_less' : 'expand_more'
+                  }}</mat-icon>
+                </button>
+                <mat-divider class="h-[1px] bg-zinc-300 dark:bg-zinc-700" />
+                <button
+                  class="flex w-40 items-center rounded-lg p-2 text-white hover:bg-black/20 dark:!text-white dark:hover:!bg-white/20"
+                  (click)="onKick(member.id)"
+                >
+                  <mat-icon class="mr-4 text-white dark:!text-white"
+                    >gavel</mat-icon
+                  >
+                  <span>{{ 'content.kick' | translate }}</span>
+                </button>
+              </div>
+            </mat-menu>
+
+            <mat-menu
+              class="!rounded-lg p-2 text-xs font-medium text-black dark:!bg-black dark:text-neutral-400"
+              #roleMenu="matMenu"
+              [hasBackdrop]="false"
+            >
+              <button
+                (click)="onChangeRole(member.id, memberRoles.GUEST)"
+                class="flex w-40 items-center rounded-lg p-2 text-white hover:bg-black/20 dark:!text-white dark:hover:!bg-white/20"
+              >
+                <mat-icon class="mr-4 text-white dark:!text-white"
+                  >verified_user</mat-icon
+                >
+                <span>{{ 'content.guest' | translate }}</span>
+                @if (member.role === memberRoles.GUEST) {
+                  <mat-icon class="ml-auto">check</mat-icon>
+                }
+              </button>
+              <button
+                (click)="onChangeRole(member.id, memberRoles.MODERATOR)"
+                class="flex w-40 items-center rounded-lg p-2 text-white hover:bg-black/20 dark:!text-white dark:hover:!bg-white/20"
+              >
+                <mat-icon class="mr-4 text-white dark:!text-white"
+                  >verified_user</mat-icon
+                >
+                <span>{{ 'content.moderator' | translate }}</span>
+                @if (member.role === memberRoles.MODERATOR) {
+                  <mat-icon class="ml-auto">check</mat-icon>
+                }
+              </button>
+            </mat-menu>
+          }
+          @if (loadingId() === member.id) {
+            <app-loading-spinner class="ml-auto" size="small" />
+          }
+        </div>
+      }
+    </div>
+  </app-modal-body>
+</app-modal>
