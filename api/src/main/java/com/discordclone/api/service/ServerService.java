@@ -1,22 +1,93 @@
 package com.discordclone.api.service;
 
+import com.discordclone.api.dto.CreateServerDto;
+import com.discordclone.api.dto.ServerDTO;
+import com.discordclone.api.model.Channel;
+import com.discordclone.api.model.Member;
+import com.discordclone.api.model.Profile;
 import com.discordclone.api.model.Server;
+import com.discordclone.api.repository.ChannelRepository;
 import com.discordclone.api.repository.ServerRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.discordclone.api.util.mapper.ServerMapper;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.transaction.Transactional;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 public class ServerService {
-    @Autowired
-    private ServerRepository serverRepository;
+    private final ServerRepository serverRepository;
+    private final JwtService jwtService;
+    private final ProfileService profileService;
+    private final ChannelRepository channelRepository;
+    private final MemberService memberService;
+    private final ServerMapper serverMapper;
 
-    // Create a new server
-    public Server createServer(Server server) {
-        return serverRepository.save(server);
+    public ServerService(
+            ServerRepository serverRepository,
+            JwtService jwtService,
+            ProfileService profileService,
+            ChannelRepository channelRepository,
+            MemberService memberService, ServerMapper serverMapper
+    ) {
+        this.serverRepository = serverRepository;
+        this.jwtService = jwtService;
+        this.profileService = profileService;
+        this.channelRepository = channelRepository;
+        this.memberService = memberService;
+        this.serverMapper = serverMapper;
+    }
+
+    @Transactional
+    public ResponseEntity<?> createServer(CreateServerDto createServerDto, HttpServletRequest request) {
+        Cookie[] cookies = request.getCookies();
+        String username = null;
+        if (cookies != null) {
+            for (Cookie cookie : cookies) {
+                if(cookie.getName().equals("Jwt")) {
+                    System.out.println(cookie.getName());
+                    username = jwtService.extractUsername(cookie.getValue());
+                    break;
+                }
+            }
+        } else {
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        }
+
+        Optional<Profile> currentUser = profileService.getUserByEmail(username);
+
+        if (currentUser.isPresent()) {
+            Channel channel = new Channel();
+            Member member = new Member()
+                    .setProfile(currentUser.get());
+
+            Server newServer = new Server()
+                    .setImageUrl(createServerDto.getServerImage())
+                    .setName(createServerDto.getServerName())
+                    .setInviteCode(UUID.randomUUID())
+                    .setProfile(currentUser.get())
+                    .setChannels(Set.of(channel))
+                    .setMembers(Set.of(member));
+
+            channelRepository.save(channel);
+            memberService.createMember(member);
+            Server savedServer = serverRepository.save(newServer);
+
+            Optional<Server> optionalServer = serverRepository.findById(savedServer.getId());
+
+            if (optionalServer.isPresent()) {
+                ServerDTO serverDTO = serverMapper.toServerDTO(optionalServer.get());
+                return new ResponseEntity<>(serverDTO, HttpStatus.CREATED);
+            }
+
+            return new ResponseEntity<>("Error", HttpStatus.UNPROCESSABLE_ENTITY);
+        } else {
+            return new ResponseEntity<>("error", HttpStatus.UNAUTHORIZED);
+        }
     }
 
     // Get server by ID
@@ -29,13 +100,14 @@ public class ServerService {
             Server server = existingServer.get();
             server.setName(updatedServer.getName());
             server.setImageUrl(updatedServer.getImageUrl());
+            server.setChannels(server.getChannels());
+            server.setMembers(server.getMembers());
             return Optional.of(serverRepository.save(server));
         }
 
         return Optional.empty();
     }
 
-    // Delete a server
     public boolean deleteServer(UUID id) {
         Optional<Server> server = serverRepository.findById(id);
 
@@ -47,6 +119,5 @@ public class ServerService {
         return false;
     }
 
-    // Get all servers
     public List<Server> getAllServers() { return serverRepository.findAll(); }
 }

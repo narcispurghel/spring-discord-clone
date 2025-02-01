@@ -8,6 +8,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
 
@@ -33,7 +34,7 @@ public class Member {
 
     @ManyToMany(mappedBy = "members")
     @JsonManagedReference
-    private Set<Server> servers;
+    private Set<Server> servers = new HashSet<>();
 
     @OneToOne
     @JoinColumn(name = "profile_id")

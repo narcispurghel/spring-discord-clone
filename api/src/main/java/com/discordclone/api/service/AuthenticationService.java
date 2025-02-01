@@ -20,10 +20,10 @@ public class AuthenticationService {
     private final ProfileMapper profileMapper;
 
     public AuthenticationService(
-            ProfileRepository profileRepository, JwtService jwtService,
+            ProfileRepository profileRepository,
             AuthenticationManager authenticationManager,
             PasswordEncoder passwordEncoder,
-            UserDetailsServiceImplementation userDetailsServiceImplementation, ProfileMapper profileMapper
+            ProfileMapper profileMapper
     ) {
         this.authenticationManager = authenticationManager;
         this.profileRepository = profileRepository;

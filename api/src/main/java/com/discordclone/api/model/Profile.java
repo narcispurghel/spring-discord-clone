@@ -28,7 +28,7 @@ public class Profile {
     private String password;
 
     @JsonManagedReference
-    @OneToMany(mappedBy = "profileId")
+    @OneToMany(mappedBy = "profile")
     private Set<Server> server = new HashSet<>();
 
     @CreationTimestamp

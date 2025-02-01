@@ -1,11 +1,10 @@
 package com.discordclone.api.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
@@ -32,28 +31,23 @@ public class Server {
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "profile_id")
     @JsonBackReference
-    private Profile profileId;
+    private Profile profile;
 
-    @CreationTimestamp
     @Column(updatable = false, name = "created_at")
-    private Date createdAt;
+    private LocalDateTime createdAt = LocalDateTime.now();
 
-    @UpdateTimestamp
     @Column(name = "updated_at")
-    private Date updatedAt;
+    private LocalDateTime updatedAt = LocalDateTime.now();
 
     @OneToMany(mappedBy = "server")
-    @JsonManagedReference
-    Set<Channel> channels = new HashSet<>();
+    private Set<Channel> channels = new HashSet<>();
 
-
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "member_server",
             joinColumns = @JoinColumn(name = "server_id"),
             inverseJoinColumns = @JoinColumn(name = "member_id")
     )
-    @JsonBackReference
     private Set<Member> members = new HashSet<>();
 
     public UUID getId() {
@@ -92,20 +86,20 @@ public class Server {
         return this;
     }
 
-    public Date getCreatedAt() {
+    public LocalDateTime getCreatedAt() {
         return createdAt;
     }
 
-    public Server setCreatedAt(Date createdAt) {
+    public Server setCreatedAt(LocalDateTime createdAt) {
         this.createdAt = createdAt;
         return this;
     }
 
-    public Date getUpdatedAt() {
+    public LocalDateTime getUpdatedAt() {
         return updatedAt;
     }
 
-    public Server setUpdatedAt(Date updatedAt) {
+    public Server setUpdatedAt(LocalDateTime updatedAt) {
         this.updatedAt = updatedAt;
         return this;
     }
@@ -136,12 +130,12 @@ public class Server {
         members.add(member);
     }
 
-    public Profile getProfileId() {
-        return profileId;
+    public Profile getProfile() {
+        return profile;
     }
 
-    public Server setProfileId(Profile profileId) {
-        this.profileId = profileId;
+    public Server setProfile(Profile profile) {
+        this.profile = profile;
         return this;
     }
 }

@@ -25,9 +25,6 @@ public class Channel {
     @Column
     private ChannelType type = ChannelType.TEXT;
 
-    @Column(name = "channel_server_id")
-    private UUID serverId;
-
     @Column(name = "created_at", updatable = false)
     @CreationTimestamp
     private Date createdAt;
@@ -73,15 +70,6 @@ public class Channel {
 
     public Channel setChannelName(String channelName) {
         this.channelName = channelName;
-        return this;
-    }
-
-    public UUID getServerId() {
-        return serverId;
-    }
-
-    public Channel setServerId(UUID serverId) {
-        this.serverId = serverId;
         return this;
     }
 
