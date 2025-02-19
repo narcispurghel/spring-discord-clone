@@ -43,12 +43,12 @@ public class AuthenticationService {
     public Profile authenticate(LoginUserDto input) {
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
-                        input.getEmail(),
+                        input.getUsername(),
                         input.getPassword()
                 )
         );
 
-        return profileRepository.findByEmail(input.getEmail())
+        return profileRepository.findByEmail(input.getUsername())
                 .orElseThrow();
     }
 }

@@ -2,21 +2,17 @@ package com.discordclone.api.exception;
 
 import com.discordclone.api.dto.ErrorResponseDto;
 import jakarta.servlet.ServletException;
-import jakarta.servlet.http.HttpServletRequest;
 import org.hibernate.PropertyValueException;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
-import org.springframework.http.ProblemDetail;
 import org.springframework.http.ResponseEntity;
-import org.springframework.lang.NonNull;
 import org.springframework.security.access.AccessDeniedException;
-import org.springframework.security.access.AuthorizationServiceException;
+import org.springframework.security.authorization.AuthorizationDeniedException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.web.ErrorResponse;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.util.NoSuchElementException;
 
 @RestControllerAdvice
@@ -43,20 +39,6 @@ public class GlobalExceptionHandler {
         );
     }
 
-    @ExceptionHandler(AccessDeniedException.class)
-    public ResponseEntity<ErrorResponseDto> handleAccessDeniedException(AccessDeniedException e){
-        return ResponseEntity.status(401).body(
-                new ErrorResponseDto(
-                        HttpStatus.valueOf(401),
-                        e.getMessage()));
-    }
-
-    @ExceptionHandler(MissingOrMalformedJwtException.class)
-    public ResponseEntity<MissingOrMalformedJwtException> handleAuthorizationDeniedException(AuthorizationServiceException e) {
-        return new ResponseEntity<>
-                (new MissingOrMalformedJwtException("Authorization header is missing"), HttpStatus.UNAUTHORIZED);
-    }
-
     @ExceptionHandler(PropertyValueException.class)
     public ResponseEntity<String> handlePropertyValueException(PropertyValueException e) {
         return new ResponseEntity<>(e.getMessage(), HttpStatus.UNPROCESSABLE_ENTITY);
@@ -71,5 +53,21 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(NoSuchElementException.class)
     public ResponseEntity<String> handleNoSuchElementException(NoSuchElementException e) {
         return new ResponseEntity<String>(e.getMessage(), HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(InvocationTargetException.class)
+    public ResponseEntity<ErrorResponseDto> handleInvocationTargetException(InvocationTargetException e) {
+        return ResponseEntity.status(401).body(
+                new ErrorResponseDto(
+                        HttpStatus.valueOf(401),
+                        e.getMessage()));
+    }
+
+    @ExceptionHandler(AuthorizationDeniedException.class)
+    public ResponseEntity<ErrorResponseDto> handleAuthorizationDeniedException(AuthorizationDeniedException e) {
+        return ResponseEntity.status(401).body(
+                new ErrorResponseDto(
+                        HttpStatus.valueOf(401),
+                        e.getMessage()));
     }
 }

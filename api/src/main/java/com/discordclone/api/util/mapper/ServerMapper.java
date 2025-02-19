@@ -35,7 +35,7 @@ public class ServerMapper {
                 .setChannels(serverDTO.getChannels())
                 .setMembers(serverDTO.getMembers())
                 .setName(serverDTO.getName())
-                .setProfile(profileRepository.findById(serverDTO.getProfileId()).get())
+                .setProfile(profileRepository.findById(serverDTO.getProfileId()).orElseThrow())
                 .setUpdatedAt(serverDTO.getUpdatedAt())
                 .setCreatedAt(serverDTO.getCreatedAt())
                 .setInviteCode(serverDTO.getInviteCode())

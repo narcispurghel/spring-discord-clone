@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.*;
 
+@Transactional
 @Service
 public class ServerService {
     private final ServerRepository serverRepository;
@@ -42,8 +43,8 @@ public class ServerService {
         this.serverMapper = serverMapper;
     }
 
-    @Transactional
-    public ResponseEntity<?> createServer(CreateServerDto createServerDto, HttpServletRequest request) {
+    public ResponseEntity<?> createServer(CreateServerDto createServerDto,
+                                          HttpServletRequest request) {
         Cookie[] cookies = request.getCookies();
         String username = null;
         if (cookies != null) {
@@ -62,8 +63,8 @@ public class ServerService {
 
         if (currentUser.isPresent()) {
             Channel channel = new Channel();
-            Member member = new Member()
-                    .setProfile(currentUser.get());
+            Member member = new Member();
+            member.setProfile(currentUser.get());
 
             Server newServer = new Server()
                     .setImageUrl(createServerDto.getServerImage())
@@ -75,19 +76,14 @@ public class ServerService {
 
             channelRepository.save(channel);
             memberService.createMember(member);
+
             Server savedServer = serverRepository.save(newServer);
+            ServerDTO serverDTO = serverMapper.toServerDTO(savedServer);
 
-            Optional<Server> optionalServer = serverRepository.findById(savedServer.getId());
-
-            if (optionalServer.isPresent()) {
-                ServerDTO serverDTO = serverMapper.toServerDTO(optionalServer.get());
-                return new ResponseEntity<>(serverDTO, HttpStatus.CREATED);
-            }
-
-            return new ResponseEntity<>("Error", HttpStatus.UNPROCESSABLE_ENTITY);
-        } else {
-            return new ResponseEntity<>("error", HttpStatus.UNAUTHORIZED);
+            return new ResponseEntity<>(serverDTO, HttpStatus.CREATED);
         }
+
+        return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
     }
 
     // Get server by ID
@@ -119,5 +115,7 @@ public class ServerService {
         return false;
     }
 
-    public List<Server> getAllServers() { return serverRepository.findAll(); }
+    public List<Server> getAllServers() {
+        return serverRepository.findAll();
+    }
 }

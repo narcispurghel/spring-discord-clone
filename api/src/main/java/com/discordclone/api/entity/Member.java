@@ -33,12 +33,10 @@ public class Member {
     private Date updatedAt;
 
     @ManyToMany(mappedBy = "members")
-    @JsonManagedReference
     private Set<Server> servers = new HashSet<>();
 
     @OneToOne
     @JoinColumn(name = "profile_id")
-    @JsonBackReference
     private Profile profile;
 
     public Set<Server> getServers() {

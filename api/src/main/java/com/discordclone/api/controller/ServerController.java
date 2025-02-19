@@ -1,56 +1,59 @@
 package com.discordclone.api.controller;
 
 import com.discordclone.api.dto.CreateServerDto;
+import com.discordclone.api.dto.ServerDTO;
 import com.discordclone.api.entity.Server;
 import com.discordclone.api.repository.ServerRepository;
 import com.discordclone.api.service.ServerService;
+import com.discordclone.api.util.mapper.ServerMapper;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.transaction.Transactional;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Collection;
 import java.util.Optional;
 import java.util.UUID;
 
 @RestController
+@Transactional
 @RequestMapping("/api")
 public class    ServerController {
 
     private final ServerService serverService;
     private final ServerRepository serverRepository;
+    private final ServerMapper serverMapper;
 
     public ServerController(
             ServerService serverService,
-            ServerRepository serverRepository
+            ServerRepository serverRepository, ServerMapper serverMapper
     ) {
         this.serverService = serverService;
         this.serverRepository = serverRepository;
+        this.serverMapper = serverMapper;
+    }
+
+    @GetMapping("server")
+    public ResponseEntity<Collection<Server>> getServers() {
+        return ResponseEntity.status(HttpStatus.OK).body(serverService.getAllServers());
     }
 
     @PostMapping("/servers")
-    public ResponseEntity<?> createServer(@RequestBody CreateServerDto createServerDto, HttpServletRequest request) {
-        try {
-            return serverService.createServer(createServerDto, request);
-        } catch (Exception e) {
-            return new ResponseEntity<String>(e.getMessage(), HttpStatus.UNAUTHORIZED);
-        }
+    public ResponseEntity<?> createServer(@RequestBody CreateServerDto createServerDto,
+                                          HttpServletRequest request) {
+        return serverService.createServer(createServerDto, request);
     }
 
-    @Transactional
     @GetMapping("/servers/{id}/server-with-channels-members-and-profiles")
     public ResponseEntity<?> getServerById(@PathVariable("id") UUID id) {
-        try {
-            Optional<Server> server = serverRepository.findById(id);
+        Optional<Server> server = serverRepository.findById(id);
 
-            if(server.isPresent()) {
-                return new ResponseEntity<Server>(server.get(), HttpStatus.OK);
-            } else {
-                return new ResponseEntity<String>(String.format("Server %s not found\n", id), HttpStatus.NOT_FOUND);
-            }
-
-        } catch (Exception e) {
-            return new ResponseEntity<String>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        if(server.isPresent()) {
+            ServerDTO response = serverMapper.toServerDTO(server.get());
+            return new ResponseEntity<>(response, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>("Server " + id + " not found!", HttpStatus.NOT_FOUND);
         }
     }
 

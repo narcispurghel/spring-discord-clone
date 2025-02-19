@@ -21,7 +21,9 @@ public class AuthenticationController {
     private final AuthenticationService authenticationService;
     private final UserDetailsServiceImplementation userDetailsServiceImplementation;
 
-    public AuthenticationController(JwtService jwtService, AuthenticationService authenticationService, UserDetailsServiceImplementation userDetailsServiceImplementation) {
+    public AuthenticationController(JwtService jwtService,
+                                    AuthenticationService authenticationService,
+                                    UserDetailsServiceImplementation userDetailsServiceImplementation) {
         this.jwtService = jwtService;
         this.authenticationService = authenticationService;
         this.userDetailsServiceImplementation = userDetailsServiceImplementation;
@@ -44,7 +46,8 @@ public class AuthenticationController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<LoginResponseDto> authenticate(@RequestBody LoginUserDto loginUserDto, HttpServletResponse response) {
+    public ResponseEntity<LoginResponseDto> authenticate(@RequestBody LoginUserDto loginUserDto,
+                                                         HttpServletResponse response) {
         Profile authenticatedProfile = authenticationService.authenticate(loginUserDto);
 
         String jwtToken = jwtService.generateToken(userDetailsServiceImplementation.loadUserByUsername(authenticatedProfile.getEmail()));

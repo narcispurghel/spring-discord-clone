@@ -40,7 +40,6 @@ public class Profile {
     private Date updatedAt;
 
     @OneToOne(mappedBy = "profile")
-    @JsonManagedReference
     private Member member;
 
     @OneToMany(mappedBy = "profile")
