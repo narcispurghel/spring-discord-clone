@@ -1,4 +1,4 @@
-package com.discordclone.api.model;
+package com.discordclone.api.entity;
 
 import com.discordclone.api.util.ChannelType;
 import com.fasterxml.jackson.annotation.JsonBackReference;

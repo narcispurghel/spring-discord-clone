@@ -1,7 +1,7 @@
 package com.discordclone.api.util.mapper;
 
 import com.discordclone.api.dto.ServerDTO;
-import com.discordclone.api.model.Server;
+import com.discordclone.api.entity.Server;
 import com.discordclone.api.repository.ProfileRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Component;

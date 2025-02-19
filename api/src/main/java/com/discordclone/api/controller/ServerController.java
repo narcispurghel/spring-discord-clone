@@ -1,7 +1,7 @@
 package com.discordclone.api.controller;
 
 import com.discordclone.api.dto.CreateServerDto;
-import com.discordclone.api.model.Server;
+import com.discordclone.api.entity.Server;
 import com.discordclone.api.repository.ServerRepository;
 import com.discordclone.api.service.ServerService;
 import jakarta.servlet.http.HttpServletRequest;

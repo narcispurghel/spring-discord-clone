@@ -1,6 +1,6 @@
 package com.discordclone.api.controller;
 
-import com.discordclone.api.model.Profile;
+import com.discordclone.api.entity.Profile;
 import com.discordclone.api.service.ProfileService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;

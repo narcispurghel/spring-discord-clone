@@ -1,12 +1,9 @@
 package com.discordclone.api.dto;
 
-import com.discordclone.api.model.Channel;
-import com.discordclone.api.model.Member;
-import com.discordclone.api.model.Profile;
+import com.discordclone.api.entity.Channel;
+import com.discordclone.api.entity.Member;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;

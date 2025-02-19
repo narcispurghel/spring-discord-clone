@@ -1,4 +1,4 @@
-package com.discordclone.api.model;
+package com.discordclone.api.entity;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;

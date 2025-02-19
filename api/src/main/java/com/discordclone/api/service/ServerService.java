@@ -2,10 +2,10 @@ package com.discordclone.api.service;
 
 import com.discordclone.api.dto.CreateServerDto;
 import com.discordclone.api.dto.ServerDTO;
-import com.discordclone.api.model.Channel;
-import com.discordclone.api.model.Member;
-import com.discordclone.api.model.Profile;
-import com.discordclone.api.model.Server;
+import com.discordclone.api.entity.Channel;
+import com.discordclone.api.entity.Member;
+import com.discordclone.api.entity.Profile;
+import com.discordclone.api.entity.Server;
 import com.discordclone.api.repository.ChannelRepository;
 import com.discordclone.api.repository.ServerRepository;
 import com.discordclone.api.util.mapper.ServerMapper;
