@@ -1,6 +1,6 @@
-package com.discordclone.api.template;
+package com.discordclone.api.dto.auth;
 
-public class LoginResponse {
+public class LoginResponseDto {
     private String token;
 
     private long expiresIn;
@@ -9,7 +9,7 @@ public class LoginResponse {
         return token;
     }
 
-    public LoginResponse setToken(String token) {
+    public LoginResponseDto setToken(String token) {
         this.token = token;
         return this;
     }
@@ -18,7 +18,7 @@ public class LoginResponse {
         return expiresIn;
     }
 
-    public LoginResponse setExpiresIn(long expiresIn) {
+    public LoginResponseDto setExpiresIn(long expiresIn) {
         this.expiresIn = expiresIn;
         return this;
     }

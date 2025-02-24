@@ -1,11 +1,8 @@
 package com.discordclone.api.model;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
@@ -30,7 +27,6 @@ public class Server {
 
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "profile_id")
-    @JsonBackReference
     private Profile profile;
 
     @Column(updatable = false, name = "created_at")

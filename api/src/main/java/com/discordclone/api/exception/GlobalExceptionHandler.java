@@ -1,79 +1,97 @@
 package com.discordclone.api.exception;
 
-import jakarta.servlet.ServletException;
-import jakarta.servlet.http.HttpServletRequest;
+import com.discordclone.api.dto.ErrorResponseDto;
 import org.hibernate.PropertyValueException;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
-import org.springframework.http.ProblemDetail;
 import org.springframework.http.ResponseEntity;
-import org.springframework.lang.NonNull;
-import org.springframework.security.access.AccessDeniedException;
-import org.springframework.security.access.AuthorizationServiceException;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authorization.AuthorizationDeniedException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.web.ErrorResponse;
+import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.util.NoSuchElementException;
 
-@RestControllerAdvice
+@ControllerAdvice
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(IOException.class)
-    public ResponseEntity<String> handleIOException(IOException e) {
-        // Log the exception (you can use a logger here)
-        return new ResponseEntity<>("I/O Error: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+    public ResponseEntity<ErrorResponseDto> handleIOException(IOException e) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
+                new ErrorResponseDto(HttpStatus.BAD_REQUEST, e.getMessage())
+        );
     }
 
-    @ExceptionHandler(ServletException.class)
-    public ResponseEntity<String> handleServletException(ServletException e) {
-        // Log the exception (you can use a logger here)
-        return new ResponseEntity<>("Servlet Error: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+    @ExceptionHandler(BadCredentialsException.class)
+    public ResponseEntity<ErrorResponseDto> handleServletException(BadCredentialsException e) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
+                new ErrorResponseDto(HttpStatus.BAD_REQUEST, e.getMessage())
+        );
+    }
+
+    @ExceptionHandler(InvalidInputException.class)
+    public ResponseEntity<ErrorResponseDto> handleInvalidInputException(InvalidInputException e) {
+        return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).body(
+                new ErrorResponseDto(HttpStatus.UNPROCESSABLE_ENTITY, e.getMessage())
+        );
+    }
+
+    @ExceptionHandler(UnsupportedOperationException.class)
+    public ResponseEntity<ErrorResponseDto> handleServisssceException(UnsupportedOperationException e) {
+        e.printStackTrace();
+
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(
+                new ErrorResponseDto(HttpStatus.UNAUTHORIZED, e.getMessage())
+        );
+    }
+
+    @ExceptionHandler(RequestBodyNullException.class)
+    public ResponseEntity<ErrorResponseDto> handleRequestBodyNullException(RequestBodyNullException e) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
+                new ErrorResponseDto(HttpStatus.BAD_REQUEST, e.getMessage())
+        );
     }
 
     @ExceptionHandler(MissingOrMalformedJwtException.class)
-    public ResponseEntity<String> handleMissingOrMalformedJwtException(MissingOrMalformedJwtException ex) {
-        return new ResponseEntity<>(ex.getMessage(), HttpStatus.UNAUTHORIZED);
+    public ResponseEntity<ErrorResponseDto> handleMissingOrMalformedJwtException(MissingOrMalformedJwtException e) {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(
+                new ErrorResponseDto(HttpStatus.UNAUTHORIZED, e.getMessage())
+        );
     }
 
-    @ExceptionHandler
-    public ResponseEntity<ErrorResponse> handleAccessDeniedException(AccessDeniedException e, HttpServletRequest request){
-        return ResponseEntity.status(401).body(new ErrorResponse() {
-            @Override
-            @NonNull
-            public HttpStatusCode getStatusCode() {
-                return HttpStatus.UNAUTHORIZED;
-            }
-
-            @Override
-            @NonNull
-            public ProblemDetail getBody() {
-                return ProblemDetail.forStatus(401);
-            }
-        });
-    }
-
-    @ExceptionHandler
-    public ResponseEntity<MissingOrMalformedJwtException> handleAuthorizationDeniedException(AuthorizationServiceException e) {
-        return new ResponseEntity<>
-                (new MissingOrMalformedJwtException("Authorization header is missing"), HttpStatus.UNAUTHORIZED);
-    }
-
-    @ExceptionHandler
+    @ExceptionHandler(PropertyValueException.class)
     public ResponseEntity<String> handlePropertyValueException(PropertyValueException e) {
         return new ResponseEntity<>(e.getMessage(), HttpStatus.UNPROCESSABLE_ENTITY);
     }
 
-    @ExceptionHandler
-    public ResponseEntity<String> handleUsernameNotFoundException(UsernameNotFoundException e) {
-        return new ResponseEntity<String>(e.getMessage(), HttpStatus.NOT_FOUND);
+    @ExceptionHandler(UsernameNotFoundException.class)
+    public ResponseEntity<?> handleUsernameNotFoundException(UsernameNotFoundException e) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
+                new ErrorResponseDto(HttpStatus.NOT_FOUND, e.getMessage())
+        );
     }
 
 
-    @ExceptionHandler
+    @ExceptionHandler(NoSuchElementException.class)
     public ResponseEntity<String> handleNoSuchElementException(NoSuchElementException e) {
         return new ResponseEntity<String>(e.getMessage(), HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(InvocationTargetException.class)
+    public ResponseEntity<ErrorResponseDto> handleInvocationTargetException(InvocationTargetException e) {
+        return ResponseEntity.status(401).body(
+                new ErrorResponseDto(
+                        HttpStatus.valueOf(401),
+                        e.getMessage()));
+    }
+
+    @ExceptionHandler(AuthorizationDeniedException.class)
+    public ResponseEntity<ErrorResponseDto> handleAuthorizationDeniedException(AuthorizationDeniedException e) {
+        return ResponseEntity.status(401).body(
+                new ErrorResponseDto(
+                        HttpStatus.valueOf(401),
+                        e.getMessage()));
     }
 }

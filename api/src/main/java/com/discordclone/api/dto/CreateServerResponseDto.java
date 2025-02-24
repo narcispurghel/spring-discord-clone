@@ -1,9 +1,9 @@
-package com.discordclone.api.template;
+package com.discordclone.api.dto;
 
 import java.util.Date;
 import java.util.UUID;
 
-public class CreateServerResponse {
+public class CreateServerResponseDto {
     private UUID id;
     private String name;
     private String imageUrl;
@@ -12,7 +12,7 @@ public class CreateServerResponse {
     private Date createdAt;
     private Date updatedAt;
 
-    public CreateServerResponse() {
+    public CreateServerResponseDto() {
 
     }
 
@@ -20,7 +20,7 @@ public class CreateServerResponse {
         return id;
     }
 
-    public CreateServerResponse setId(UUID id) {
+    public CreateServerResponseDto setId(UUID id) {
         this.id = id;
         return this;
     }
@@ -29,7 +29,7 @@ public class CreateServerResponse {
         return name;
     }
 
-    public CreateServerResponse setName(String name) {
+    public CreateServerResponseDto setName(String name) {
         this.name = name;
         return this;
     }
@@ -38,7 +38,7 @@ public class CreateServerResponse {
         return imageUrl;
     }
 
-    public CreateServerResponse setImageUrl(String imageUrl) {
+    public CreateServerResponseDto setImageUrl(String imageUrl) {
         this.imageUrl = imageUrl;
         return this;
     }
@@ -47,7 +47,7 @@ public class CreateServerResponse {
         return inviteCode;
     }
 
-    public CreateServerResponse setInviteCode(UUID inviteCode) {
+    public CreateServerResponseDto setInviteCode(UUID inviteCode) {
         this.inviteCode = inviteCode;
         return this;
     }
@@ -56,7 +56,7 @@ public class CreateServerResponse {
         return profileId;
     }
 
-    public CreateServerResponse setProfileId(String profileId) {
+    public CreateServerResponseDto setProfileId(String profileId) {
         this.profileId = profileId;
         return this;
     }
@@ -65,7 +65,7 @@ public class CreateServerResponse {
         return createdAt;
     }
 
-    public CreateServerResponse setCreatedAt(Date createdAt) {
+    public CreateServerResponseDto setCreatedAt(Date createdAt) {
         this.createdAt = createdAt;
         return this;
     }
@@ -74,7 +74,7 @@ public class CreateServerResponse {
         return updatedAt;
     }
 
-    public CreateServerResponse setUpdatedAt(Date updatedAt) {
+    public CreateServerResponseDto setUpdatedAt(Date updatedAt) {
         this.updatedAt = updatedAt;
         return this;
     }

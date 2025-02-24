@@ -1,7 +1,6 @@
 package com.discordclone.api.model;
 
 import com.discordclone.api.util.ChannelType;
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import jakarta.transaction.Transactional;
 import org.hibernate.annotations.CreationTimestamp;
@@ -35,13 +34,7 @@ public class Channel {
 
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "server_id")
-    @JsonBackReference
     private Server server;
-
-    @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "profile_id")
-    @JsonBackReference
-    private Profile profile;
 
     public Channel() {
     }
@@ -100,12 +93,4 @@ public class Channel {
         return this;
     }
 
-    public Profile getProfile() {
-        return profile;
-    }
-
-    public Channel setProfile(Profile profile) {
-        this.profile = profile;
-        return this;
-    }
 }

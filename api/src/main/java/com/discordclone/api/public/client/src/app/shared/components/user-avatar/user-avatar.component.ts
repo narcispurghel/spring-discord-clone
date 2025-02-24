@@ -18,6 +18,9 @@ export class UserAvatarComponent {
   @Input({ required: true }) user!: UserDef;
 
   getUserInitials(username: string): string {
+    if (!username) {
+      return ""
+    }
     const splittedUsername = username.split(' ');
     const first = splittedUsername[0];
     const last = splittedUsername.at(-1);

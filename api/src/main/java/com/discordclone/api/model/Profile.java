@@ -7,8 +7,9 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 import java.util.*;
 
-@Table(name = "users")
+
 @Entity
+@Table(name = "users")
 public class Profile {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -39,13 +40,8 @@ public class Profile {
     @Column(name = "updated_at")
     private Date updatedAt;
 
-    @OneToOne(mappedBy = "profile")
-    @JsonManagedReference
-    private Member member;
-
     @OneToMany(mappedBy = "profile")
-    @JsonManagedReference
-    private Set<Channel> channels = new HashSet<>();
+    private Collection<Member> member;
 
     public String getImageUrl() {
         return imageUrl;
@@ -56,13 +52,12 @@ public class Profile {
         return this;
     }
 
-    public Member getMember() {
+    public Collection<Member> getMember() {
         return member;
     }
 
-    public Profile setMember(Member member) {
+    public void setMember(Collection<Member> member) {
         this.member = member;
-        return this;
     }
 
     public UUID getId() {
@@ -125,15 +120,6 @@ public class Profile {
 
     public Profile setServer(Set<Server> server) {
         this.server = server;
-        return this;
-    }
-
-    public Set<Channel> getChannels() {
-        return channels;
-    }
-
-    public Profile setChannels(Set<Channel> channels) {
-        this.channels = channels;
         return this;
     }
 }

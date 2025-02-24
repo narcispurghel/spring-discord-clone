@@ -1,9 +1,9 @@
-package com.discordclone.api.template;
+package com.discordclone.api.dto.auth;
 
 import java.util.Date;
 import java.util.UUID;
 
-public class RegisterResponse {
+public class RegisterResponseDto {
     private UUID id;
 
     private String name;
@@ -16,7 +16,7 @@ public class RegisterResponse {
 
     private Date updatedAt;
 
-    public RegisterResponse() {
+    public RegisterResponseDto() {
         this.imageUrl = "";
     }
 
@@ -24,7 +24,7 @@ public class RegisterResponse {
         return id;
     }
 
-    public RegisterResponse setId(UUID id) {
+    public RegisterResponseDto setId(UUID id) {
         this.id = id;
         return this;
     }
@@ -33,7 +33,7 @@ public class RegisterResponse {
         return name;
     }
 
-    public RegisterResponse setName(String name) {
+    public RegisterResponseDto setName(String name) {
         this.name = name;
         return this;
     }
@@ -42,7 +42,7 @@ public class RegisterResponse {
         return imageUrl;
     }
 
-    public RegisterResponse setImageUrl(String imageUrl) {
+    public RegisterResponseDto setImageUrl(String imageUrl) {
         this.imageUrl = imageUrl;
         return this;
     }
@@ -51,7 +51,7 @@ public class RegisterResponse {
         return email;
     }
 
-    public RegisterResponse setEmail(String email) {
+    public RegisterResponseDto setEmail(String email) {
         this.email = email;
         return this;
     }
@@ -60,7 +60,7 @@ public class RegisterResponse {
         return createdAt;
     }
 
-    public RegisterResponse setCreatedAt(Date createdAt) {
+    public RegisterResponseDto setCreatedAt(Date createdAt) {
         this.createdAt = createdAt;
         return this;
     }
@@ -69,7 +69,7 @@ public class RegisterResponse {
         return updatedAt;
     }
 
-    public RegisterResponse setUpdatedAt(Date updatedAt) {
+    public RegisterResponseDto setUpdatedAt(Date updatedAt) {
         this.updatedAt = updatedAt;
         return this;
     }

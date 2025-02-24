@@ -3,7 +3,7 @@ package com.discordclone.api.dto;
 import java.util.Date;
 import java.util.UUID;
 
-public class ProfileDTO {
+public class ProfileDto {
     private UUID id;
     private String name;
     private String email;
@@ -15,7 +15,7 @@ public class ProfileDTO {
         return id;
     }
 
-    public ProfileDTO setId(UUID id) {
+    public ProfileDto setId(UUID id) {
         this.id = id;
         return this;
     }
@@ -24,7 +24,7 @@ public class ProfileDTO {
         return name;
     }
 
-    public ProfileDTO setName(String name) {
+    public ProfileDto setName(String name) {
         this.name = name;
         return this;
     }
@@ -33,7 +33,7 @@ public class ProfileDTO {
         return email;
     }
 
-    public ProfileDTO setEmail(String email) {
+    public ProfileDto setEmail(String email) {
         this.email = email;
         return this;
     }
@@ -42,7 +42,7 @@ public class ProfileDTO {
         return imageUrl;
     }
 
-    public ProfileDTO setImageUrl(String imageUrl) {
+    public ProfileDto setImageUrl(String imageUrl) {
         this.imageUrl = imageUrl;
         return this;
     }
@@ -51,7 +51,7 @@ public class ProfileDTO {
         return createdAt;
     }
 
-    public ProfileDTO setCreatedAt(Date createdAt) {
+    public ProfileDto setCreatedAt(Date createdAt) {
         this.createdAt = createdAt;
         return this;
     }
@@ -60,7 +60,7 @@ public class ProfileDTO {
         return updatedAt;
     }
 
-    public ProfileDTO setUpdatedAt(Date updatedAt) {
+    public ProfileDto setUpdatedAt(Date updatedAt) {
         this.updatedAt = updatedAt;
         return this;
     }

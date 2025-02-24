@@ -1,56 +1,80 @@
 package com.discordclone.api.controller;
 
 import com.discordclone.api.dto.CreateServerDto;
+import com.discordclone.api.dto.ProfileDto;
+import com.discordclone.api.dto.ServerDto;
 import com.discordclone.api.model.Server;
+import com.discordclone.api.repository.ProfileRepository;
 import com.discordclone.api.repository.ServerRepository;
 import com.discordclone.api.service.ServerService;
+import com.discordclone.api.util.mapper.ProfileMapper;
+import com.discordclone.api.util.mapper.ServerMapper;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.transaction.Transactional;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;
 import java.util.UUID;
 
 @RestController
+@Transactional
 @RequestMapping("/api")
 public class    ServerController {
 
     private final ServerService serverService;
     private final ServerRepository serverRepository;
+    private final ServerMapper serverMapper;
+    private final ProfileRepository profileRepository;
+    private final ProfileMapper profileMapper;
 
     public ServerController(
             ServerService serverService,
-            ServerRepository serverRepository
+            ServerRepository serverRepository,
+            ServerMapper serverMapper,
+            ProfileRepository profileRepository,
+            ProfileMapper profileMapper
     ) {
         this.serverService = serverService;
         this.serverRepository = serverRepository;
+        this.serverMapper = serverMapper;
+        this.profileRepository = profileRepository;
+        this.profileMapper = profileMapper;
+    }
+
+    @GetMapping("/servers")
+    public ResponseEntity<?> getServers() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        Optional<ProfileDto> currentUser = profileRepository.findByEmail(authentication.getName()).map(profileMapper::toProfileDTO);
+
+        if (currentUser.isPresent()) {
+            return ResponseEntity.status(HttpStatus.OK).body(serverService.getAllServersByProfileId(currentUser.get().getId()));
+        }
+
+        throw new UsernameNotFoundException("User does not exist");
     }
 
     @PostMapping("/servers")
-    public ResponseEntity<?> createServer(@RequestBody CreateServerDto createServerDto, HttpServletRequest request) {
-        try {
-            return serverService.createServer(createServerDto, request);
-        } catch (Exception e) {
-            return new ResponseEntity<String>(e.getMessage(), HttpStatus.UNAUTHORIZED);
-        }
+    public ResponseEntity<?> createServer(@RequestBody CreateServerDto createServerDto,
+                                          HttpServletRequest request,
+                                          Authentication authentication) {
+        return serverService.createServer(createServerDto, request, authentication);
     }
 
-    @Transactional
     @GetMapping("/servers/{id}/server-with-channels-members-and-profiles")
     public ResponseEntity<?> getServerById(@PathVariable("id") UUID id) {
-        try {
-            Optional<Server> server = serverRepository.findById(id);
+        Optional<Server> server = serverRepository.findById(id);
 
-            if(server.isPresent()) {
-                return new ResponseEntity<Server>(server.get(), HttpStatus.OK);
-            } else {
-                return new ResponseEntity<String>(String.format("Server %s not found\n", id), HttpStatus.NOT_FOUND);
-            }
-
-        } catch (Exception e) {
-            return new ResponseEntity<String>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        if(server.isPresent()) {
+            ServerDto response = serverMapper.toServerDTO(server.get());
+            return new ResponseEntity<>(response, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>("Server " + id + " not found!", HttpStatus.NOT_FOUND);
         }
     }
 

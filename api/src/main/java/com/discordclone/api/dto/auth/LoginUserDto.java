@@ -1,17 +1,16 @@
-package com.discordclone.api.dto;
+package com.discordclone.api.dto.auth;
 
 public class LoginUserDto {
-    private String email;
+    private String username;
 
     private String password;
 
-    public String getEmail() {
-        return email;
+    public String getUsername() {
+        return username;
     }
 
-    public LoginUserDto setEmail(String email) {
-        this.email = email;
-        return this;
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     public String getPassword() {
