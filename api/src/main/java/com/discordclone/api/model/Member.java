@@ -1,8 +1,6 @@
-package com.discordclone.api.entity;
+package com.discordclone.api.model;
 
 import com.discordclone.api.util.Role;
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -35,7 +33,7 @@ public class Member {
     @ManyToMany(mappedBy = "members")
     private Set<Server> servers = new HashSet<>();
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "profile_id")
     private Profile profile;
 

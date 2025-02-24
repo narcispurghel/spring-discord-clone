@@ -1,8 +1,5 @@
 package com.discordclone.api.dto;
 
-import com.discordclone.api.entity.Channel;
-import com.discordclone.api.entity.Member;
-
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
@@ -16,8 +13,8 @@ public class ServerDTO {
     private UUID profileId;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
-    private Set<Channel> channels = new HashSet<>();
-    private Set<Member> members = new HashSet<>();
+    private Set<ChannelDto> channels = new HashSet<>();
+    private Set<MemberDto> members = new HashSet<>();
 
     public ServerDTO() {
     }
@@ -67,20 +64,20 @@ public class ServerDTO {
         return this;
     }
 
-    public Set<Channel> getChannels() {
+    public Set<ChannelDto> getChannels() {
         return channels;
     }
 
-    public ServerDTO setChannels(Set<Channel> channels) {
+    public ServerDTO setChannels(Set<ChannelDto> channels) {
         this.channels = channels;
         return this;
     }
 
-    public Set<Member> getMembers() {
+    public Set<MemberDto> getMembers() {
         return members;
     }
 
-    public ServerDTO setMembers(Set<Member> members) {
+    public ServerDTO setMembers(Set<MemberDto> members) {
         this.members = members;
         return this;
     }

@@ -3,12 +3,13 @@ package com.discordclone.api.controller;
 import com.discordclone.api.dto.LoginUserDto;
 import com.discordclone.api.dto.ProfileDTO;
 import com.discordclone.api.dto.RegisterUserDto;
-import com.discordclone.api.entity.Profile;
+import com.discordclone.api.model.Profile;
 import com.discordclone.api.service.AuthenticationService;
-import com.discordclone.api.service.JwtService;
-import com.discordclone.api.service.UserDetailsServiceImplementation;
+import com.discordclone.api.security.JwtService;
+import com.discordclone.api.security.UserDetailsServiceImplementation;
 import com.discordclone.api.dto.LoginResponseDto;
 import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -62,5 +63,24 @@ public class AuthenticationController {
         LoginResponseDto loginResponse = new LoginResponseDto().setToken(jwtToken).setExpiresIn(jwtService.getExpirationTime());
 
         return ResponseEntity.ok(loginResponse);
+    }
+
+    @GetMapping("/logout")
+    public ResponseEntity<?> logout(HttpServletResponse response,
+                                    HttpServletRequest request){
+//        Cookie[] cookies = request.getCookies();
+//        Iterator<Cookie> iterator = Arrays.stream(cookies).iterator();
+//
+//        while (iterator.hasNext()) {
+//            if (iterator.next().getName().equals("Jwt")) {
+//                iterator.next();
+//                iterator.remove();
+//            }
+//        }
+
+        Cookie cookie = new Cookie("Jwt", null);
+        response.addCookie(cookie);
+
+        return ResponseEntity.status(401).body("Logout success!");
     }
 }

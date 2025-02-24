@@ -1,18 +1,23 @@
 package com.discordclone.api.controller;
 
 import com.discordclone.api.dto.CreateServerDto;
+import com.discordclone.api.dto.ProfileDTO;
 import com.discordclone.api.dto.ServerDTO;
-import com.discordclone.api.entity.Server;
+import com.discordclone.api.model.Server;
+import com.discordclone.api.repository.ProfileRepository;
 import com.discordclone.api.repository.ServerRepository;
 import com.discordclone.api.service.ServerService;
+import com.discordclone.api.util.mapper.ProfileMapper;
 import com.discordclone.api.util.mapper.ServerMapper;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.transaction.Transactional;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Collection;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -24,25 +29,41 @@ public class    ServerController {
     private final ServerService serverService;
     private final ServerRepository serverRepository;
     private final ServerMapper serverMapper;
+    private final ProfileRepository profileRepository;
+    private final ProfileMapper profileMapper;
 
     public ServerController(
             ServerService serverService,
-            ServerRepository serverRepository, ServerMapper serverMapper
+            ServerRepository serverRepository,
+            ServerMapper serverMapper,
+            ProfileRepository profileRepository,
+            ProfileMapper profileMapper
     ) {
         this.serverService = serverService;
         this.serverRepository = serverRepository;
         this.serverMapper = serverMapper;
+        this.profileRepository = profileRepository;
+        this.profileMapper = profileMapper;
     }
 
-    @GetMapping("server")
-    public ResponseEntity<Collection<Server>> getServers() {
-        return ResponseEntity.status(HttpStatus.OK).body(serverService.getAllServers());
+    @GetMapping("/servers")
+    public ResponseEntity<?> getServers() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        Optional<ProfileDTO> currentUser = profileRepository.findByEmail(authentication.getName()).map(profileMapper::toProfileDTO);
+
+        if (currentUser.isPresent()) {
+            return ResponseEntity.status(HttpStatus.OK).body(serverService.getAllServersByProfileId(currentUser.get().getId()));
+        }
+
+        throw new UsernameNotFoundException("User does not exist");
     }
 
     @PostMapping("/servers")
     public ResponseEntity<?> createServer(@RequestBody CreateServerDto createServerDto,
-                                          HttpServletRequest request) {
-        return serverService.createServer(createServerDto, request);
+                                          HttpServletRequest request,
+                                          Authentication authentication) {
+        return serverService.createServer(createServerDto, request, authentication);
     }
 
     @GetMapping("/servers/{id}/server-with-channels-members-and-profiles")

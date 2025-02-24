@@ -1,6 +1,6 @@
 package com.discordclone.api.repository;
 
-import com.discordclone.api.entity.Channel;
+import com.discordclone.api.model.Channel;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.UUID;

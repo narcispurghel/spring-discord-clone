@@ -1,4 +1,4 @@
-package com.discordclone.api.service;
+package com.discordclone.api.security;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;

@@ -1,7 +1,7 @@
 package com.discordclone.api.util.mapper;
 
 import com.discordclone.api.dto.ProfileDTO;
-import com.discordclone.api.entity.Profile;
+import com.discordclone.api.model.Profile;
 import org.springframework.stereotype.Component;
 
 @Component

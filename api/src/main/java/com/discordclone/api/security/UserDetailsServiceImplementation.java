@@ -1,6 +1,6 @@
-package com.discordclone.api.service;
+package com.discordclone.api.security;
 
-import com.discordclone.api.entity.Profile;
+import com.discordclone.api.model.Profile;
 import com.discordclone.api.repository.ProfileRepository;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;

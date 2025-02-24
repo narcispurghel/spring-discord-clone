@@ -1,6 +1,6 @@
 package com.discordclone.api.repository;
 
-import com.discordclone.api.entity.Profile;
+import com.discordclone.api.model.Profile;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 

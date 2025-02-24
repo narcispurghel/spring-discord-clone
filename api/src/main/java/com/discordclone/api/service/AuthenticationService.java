@@ -3,7 +3,7 @@ package com.discordclone.api.service;
 import com.discordclone.api.dto.LoginUserDto;
 import com.discordclone.api.dto.ProfileDTO;
 import com.discordclone.api.dto.RegisterUserDto;
-import com.discordclone.api.entity.Profile;
+import com.discordclone.api.model.Profile;
 import com.discordclone.api.repository.ProfileRepository;
 import com.discordclone.api.util.mapper.ProfileMapper;
 
