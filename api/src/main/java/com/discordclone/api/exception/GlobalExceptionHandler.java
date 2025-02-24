@@ -1,16 +1,14 @@
 package com.discordclone.api.exception;
 
 import com.discordclone.api.dto.ErrorResponseDto;
-import jakarta.servlet.ServletException;
 import org.hibernate.PropertyValueException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authorization.AuthorizationDeniedException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
@@ -26,10 +24,17 @@ public class GlobalExceptionHandler {
         );
     }
 
-    @ExceptionHandler(ServletException.class)
-    public ResponseEntity<ErrorResponseDto> handleServletException(ServletException e) {
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
-                new ErrorResponseDto(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage())
+    @ExceptionHandler(BadCredentialsException.class)
+    public ResponseEntity<ErrorResponseDto> handleServletException(BadCredentialsException e) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
+                new ErrorResponseDto(HttpStatus.BAD_REQUEST, e.getMessage())
+        );
+    }
+
+    @ExceptionHandler(InvalidInputException.class)
+    public ResponseEntity<ErrorResponseDto> handleInvalidInputException(InvalidInputException e) {
+        return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).body(
+                new ErrorResponseDto(HttpStatus.UNPROCESSABLE_ENTITY, e.getMessage())
         );
     }
 
@@ -39,6 +44,13 @@ public class GlobalExceptionHandler {
 
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(
                 new ErrorResponseDto(HttpStatus.UNAUTHORIZED, e.getMessage())
+        );
+    }
+
+    @ExceptionHandler(RequestBodyNullException.class)
+    public ResponseEntity<ErrorResponseDto> handleRequestBodyNullException(RequestBodyNullException e) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
+                new ErrorResponseDto(HttpStatus.BAD_REQUEST, e.getMessage())
         );
     }
 
@@ -55,8 +67,10 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(UsernameNotFoundException.class)
-    public ResponseEntity<String> handleUsernameNotFoundException(UsernameNotFoundException e) {
-        return new ResponseEntity<String>(e.getMessage(), HttpStatus.NOT_FOUND);
+    public ResponseEntity<?> handleUsernameNotFoundException(UsernameNotFoundException e) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
+                new ErrorResponseDto(HttpStatus.NOT_FOUND, e.getMessage())
+        );
     }
 
 

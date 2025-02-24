@@ -1,4 +1,4 @@
-package com.discordclone.api.dto;
+package com.discordclone.api.dto.auth;
 
 public class LoginUserDto {
     private String username;

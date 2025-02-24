@@ -3,28 +3,19 @@ package com.discordclone.api.dto;
 import java.util.Date;
 import java.util.UUID;
 
-public class RegisterResponseDto {
+public class ProfileDto {
     private UUID id;
-
     private String name;
-
-    private String imageUrl;
-
     private String email;
-
+    private String imageUrl;
     private Date createdAt;
-
     private Date updatedAt;
-
-    public RegisterResponseDto() {
-        this.imageUrl = "";
-    }
 
     public UUID getId() {
         return id;
     }
 
-    public RegisterResponseDto setId(UUID id) {
+    public ProfileDto setId(UUID id) {
         this.id = id;
         return this;
     }
@@ -33,17 +24,8 @@ public class RegisterResponseDto {
         return name;
     }
 
-    public RegisterResponseDto setName(String name) {
+    public ProfileDto setName(String name) {
         this.name = name;
-        return this;
-    }
-
-    public String getImageUrl() {
-        return imageUrl;
-    }
-
-    public RegisterResponseDto setImageUrl(String imageUrl) {
-        this.imageUrl = imageUrl;
         return this;
     }
 
@@ -51,8 +33,17 @@ public class RegisterResponseDto {
         return email;
     }
 
-    public RegisterResponseDto setEmail(String email) {
+    public ProfileDto setEmail(String email) {
         this.email = email;
+        return this;
+    }
+
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public ProfileDto setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
         return this;
     }
 
@@ -60,7 +51,7 @@ public class RegisterResponseDto {
         return createdAt;
     }
 
-    public RegisterResponseDto setCreatedAt(Date createdAt) {
+    public ProfileDto setCreatedAt(Date createdAt) {
         this.createdAt = createdAt;
         return this;
     }
@@ -69,7 +60,7 @@ public class RegisterResponseDto {
         return updatedAt;
     }
 
-    public RegisterResponseDto setUpdatedAt(Date updatedAt) {
+    public ProfileDto setUpdatedAt(Date updatedAt) {
         this.updatedAt = updatedAt;
         return this;
     }

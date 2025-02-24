@@ -1,16 +1,16 @@
 package com.discordclone.api.util.mapper;
 
-import com.discordclone.api.dto.ProfileDTO;
+import com.discordclone.api.dto.ProfileDto;
 import com.discordclone.api.model.Profile;
 import org.springframework.stereotype.Component;
 
 @Component
 public class ProfileMapper {
-    public ProfileDTO toProfileDTO(Profile profile) {
+    public ProfileDto toProfileDTO(Profile profile) {
         if (profile == null) {
             return null;
         }
-        return new ProfileDTO()
+        return new ProfileDto()
                 .setId(profile.getId())
                 .setName(profile.getName())
                 .setEmail(profile.getEmail())
@@ -19,7 +19,7 @@ public class ProfileMapper {
                 .setUpdatedAt(profile.getUpdatedAt());
     }
 
-    public Profile toProfile(ProfileDTO profileDTO) {
+    public Profile toProfile(ProfileDto profileDTO) {
         if (profileDTO == null) {
             return null;
         }

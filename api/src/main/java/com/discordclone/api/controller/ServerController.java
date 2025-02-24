@@ -1,8 +1,8 @@
 package com.discordclone.api.controller;
 
 import com.discordclone.api.dto.CreateServerDto;
-import com.discordclone.api.dto.ProfileDTO;
-import com.discordclone.api.dto.ServerDTO;
+import com.discordclone.api.dto.ProfileDto;
+import com.discordclone.api.dto.ServerDto;
 import com.discordclone.api.model.Server;
 import com.discordclone.api.repository.ProfileRepository;
 import com.discordclone.api.repository.ServerRepository;
@@ -50,7 +50,7 @@ public class    ServerController {
     public ResponseEntity<?> getServers() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
-        Optional<ProfileDTO> currentUser = profileRepository.findByEmail(authentication.getName()).map(profileMapper::toProfileDTO);
+        Optional<ProfileDto> currentUser = profileRepository.findByEmail(authentication.getName()).map(profileMapper::toProfileDTO);
 
         if (currentUser.isPresent()) {
             return ResponseEntity.status(HttpStatus.OK).body(serverService.getAllServersByProfileId(currentUser.get().getId()));
@@ -71,7 +71,7 @@ public class    ServerController {
         Optional<Server> server = serverRepository.findById(id);
 
         if(server.isPresent()) {
-            ServerDTO response = serverMapper.toServerDTO(server.get());
+            ServerDto response = serverMapper.toServerDTO(server.get());
             return new ResponseEntity<>(response, HttpStatus.OK);
         } else {
             return new ResponseEntity<>("Server " + id + " not found!", HttpStatus.NOT_FOUND);

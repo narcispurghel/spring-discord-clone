@@ -1,15 +1,14 @@
 package com.discordclone.api.controller;
 
-import com.discordclone.api.dto.LoginUserDto;
-import com.discordclone.api.dto.ProfileDTO;
-import com.discordclone.api.dto.RegisterUserDto;
-import com.discordclone.api.model.Profile;
+import com.discordclone.api.dto.auth.LoginUserDto;
+import com.discordclone.api.dto.ProfileDto;
+import com.discordclone.api.dto.auth.RegisterUserDto;
+import com.discordclone.api.exception.RequestBodyNullException;
 import com.discordclone.api.service.AuthenticationService;
 import com.discordclone.api.security.JwtService;
 import com.discordclone.api.security.UserDetailsServiceImplementation;
-import com.discordclone.api.dto.LoginResponseDto;
+import com.discordclone.api.dto.auth.LoginResponseDto;
 import jakarta.servlet.http.Cookie;
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -31,52 +30,54 @@ public class AuthenticationController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<ProfileDTO> register(@RequestBody RegisterUserDto registerUserDto,
+    public ResponseEntity<?> register(@RequestBody(required = false) RegisterUserDto registerUserDto,
                                                HttpServletResponse response) {
-        ProfileDTO registeredProfile = authenticationService.register(registerUserDto);
-        final String jwtToken = jwtService.generateToken(userDetailsServiceImplementation.loadUserByUsername(registeredProfile.getEmail()));
 
-        Cookie cookie = new Cookie("Jwt", jwtToken);
-        cookie.setPath("/");
-        cookie.setHttpOnly(true);
-        cookie.setMaxAge(3600);
+        try {
+            ProfileDto registeredProfile = authenticationService.register(registerUserDto);
+            final String jwtToken = jwtService.generateToken(userDetailsServiceImplementation.loadUserByUsername(registeredProfile.getEmail()));
 
-        response.addCookie(cookie);
+            Cookie cookie = new Cookie("Jwt", jwtToken);
+            cookie.setPath("/");
+            cookie.setHttpOnly(true);
+            cookie.setMaxAge(36000);
 
-        return new ResponseEntity<>(registeredProfile, HttpStatus.CREATED);
+            response.addCookie(cookie);
+
+            return new ResponseEntity<>(registeredProfile, HttpStatus.CREATED);
+        }
+        catch (Exception e) {
+            throw e;
+        }
     }
 
     @PostMapping("/login")
-    public ResponseEntity<LoginResponseDto> authenticate(@RequestBody LoginUserDto loginUserDto,
-                                                         HttpServletResponse response) {
-        Profile authenticatedProfile = authenticationService.authenticate(loginUserDto);
+    public ResponseEntity<?> authenticate(@RequestBody(required = false) LoginUserDto loginUserDto,
+                                                       HttpServletResponse response) {
+        try {
+            ProfileDto authenticatedProfile = authenticationService.authenticate(loginUserDto);
+            String jwtToken = jwtService.generateToken(userDetailsServiceImplementation.loadUserByUsername(authenticatedProfile.getEmail()));
 
-        String jwtToken = jwtService.generateToken(userDetailsServiceImplementation.loadUserByUsername(authenticatedProfile.getEmail()));
+            Cookie cookie = new Cookie("Jwt", jwtToken);
+            cookie.setPath("/");
+            cookie.setHttpOnly(true);
+            cookie.setMaxAge(36000);
 
-        Cookie cookie = new Cookie("Jwt", jwtToken);
-        cookie.setPath("/");
-        cookie.setHttpOnly(true);
-        cookie.setMaxAge(3600);
+            response.addCookie(cookie);
 
-        response.addCookie(cookie);
+            LoginResponseDto loginResponse = new LoginResponseDto()
+                    .setToken(jwtToken)
+                    .setExpiresIn(jwtService.getExpirationTime());
 
-        LoginResponseDto loginResponse = new LoginResponseDto().setToken(jwtToken).setExpiresIn(jwtService.getExpirationTime());
-
-        return ResponseEntity.ok(loginResponse);
+            return ResponseEntity.ok(loginResponse);
+        }
+        catch (Exception e) {
+            throw e;
+        }
     }
 
     @GetMapping("/logout")
-    public ResponseEntity<?> logout(HttpServletResponse response,
-                                    HttpServletRequest request){
-//        Cookie[] cookies = request.getCookies();
-//        Iterator<Cookie> iterator = Arrays.stream(cookies).iterator();
-//
-//        while (iterator.hasNext()) {
-//            if (iterator.next().getName().equals("Jwt")) {
-//                iterator.next();
-//                iterator.remove();
-//            }
-//        }
+    public ResponseEntity<String> logout(HttpServletResponse response) {
 
         Cookie cookie = new Cookie("Jwt", null);
         response.addCookie(cookie);

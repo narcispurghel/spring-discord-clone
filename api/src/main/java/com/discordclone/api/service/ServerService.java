@@ -2,7 +2,7 @@ package com.discordclone.api.service;
 
 import com.discordclone.api.dto.CreateServerDto;
 import com.discordclone.api.dto.ErrorResponseDto;
-import com.discordclone.api.dto.ServerDTO;
+import com.discordclone.api.dto.ServerDto;
 import com.discordclone.api.model.Channel;
 import com.discordclone.api.model.Member;
 import com.discordclone.api.model.Profile;
@@ -97,7 +97,7 @@ public class ServerService {
             channelRepository.save(savedChannel);
             memberRepository.save(savedMember);
 
-            ServerDTO serverDTO = serverMapper.toServerDTO(savedServer);
+            ServerDto serverDTO = serverMapper.toServerDTO(savedServer);
 
             return new ResponseEntity<>(serverDTO, HttpStatus.CREATED);
         }
@@ -134,7 +134,7 @@ public class ServerService {
         return false;
     }
 
-    public Set<ServerDTO> getAllServersByProfileId(UUID profileId) {
+    public Set<ServerDto> getAllServersByProfileId(UUID profileId) {
         Set<Server> servers = serverRepository.findAllAsSetByProfileId(profileId);
 
         if (servers.isEmpty()) {

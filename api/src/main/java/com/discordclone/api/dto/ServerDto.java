@@ -5,7 +5,7 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
 
-public class ServerDTO {
+public class ServerDto {
     private UUID id;
     private String name;
     private String imageUrl;
@@ -16,14 +16,14 @@ public class ServerDTO {
     private Set<ChannelDto> channels = new HashSet<>();
     private Set<MemberDto> members = new HashSet<>();
 
-    public ServerDTO() {
+    public ServerDto() {
     }
 
     public UUID getId() {
         return id;
     }
 
-    public ServerDTO setId(UUID id) {
+    public ServerDto setId(UUID id) {
         this.id = id;
         return this;
     }
@@ -32,7 +32,7 @@ public class ServerDTO {
         return name;
     }
 
-    public ServerDTO setName(String name) {
+    public ServerDto setName(String name) {
         this.name = name;
         return this;
     }
@@ -41,7 +41,7 @@ public class ServerDTO {
         return imageUrl;
     }
 
-    public ServerDTO setImageUrl(String imageUrl) {
+    public ServerDto setImageUrl(String imageUrl) {
         this.imageUrl = imageUrl;
         return this;
     }
@@ -50,7 +50,7 @@ public class ServerDTO {
         return inviteCode;
     }
 
-    public ServerDTO setInviteCode(UUID inviteCode) {
+    public ServerDto setInviteCode(UUID inviteCode) {
         this.inviteCode = inviteCode;
         return this;
     }
@@ -59,7 +59,7 @@ public class ServerDTO {
         return profileId;
     }
 
-    public ServerDTO setProfileId(UUID profileId) {
+    public ServerDto setProfileId(UUID profileId) {
         this.profileId = profileId;
         return this;
     }
@@ -68,7 +68,7 @@ public class ServerDTO {
         return channels;
     }
 
-    public ServerDTO setChannels(Set<ChannelDto> channels) {
+    public ServerDto setChannels(Set<ChannelDto> channels) {
         this.channels = channels;
         return this;
     }
@@ -77,7 +77,7 @@ public class ServerDTO {
         return members;
     }
 
-    public ServerDTO setMembers(Set<MemberDto> members) {
+    public ServerDto setMembers(Set<MemberDto> members) {
         this.members = members;
         return this;
     }
@@ -86,7 +86,7 @@ public class ServerDTO {
         return createdAt;
     }
 
-    public ServerDTO setCreatedAt(LocalDateTime createdAt) {
+    public ServerDto setCreatedAt(LocalDateTime createdAt) {
         this.createdAt = createdAt;
         return this;
     }
@@ -95,7 +95,7 @@ public class ServerDTO {
         return updatedAt;
     }
 
-    public ServerDTO setUpdatedAt(LocalDateTime updatedAt) {
+    public ServerDto setUpdatedAt(LocalDateTime updatedAt) {
         this.updatedAt = updatedAt;
         return this;
     }

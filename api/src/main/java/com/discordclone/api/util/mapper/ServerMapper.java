@@ -1,6 +1,6 @@
 package com.discordclone.api.util.mapper;
 
-import com.discordclone.api.dto.ServerDTO;
+import com.discordclone.api.dto.ServerDto;
 import com.discordclone.api.model.Server;
 import com.discordclone.api.repository.ProfileRepository;
 import jakarta.transaction.Transactional;
@@ -21,8 +21,8 @@ public class ServerMapper {
         this.memberMapper = memberMapper;
     }
 
-    public ServerDTO toServerDTO(Server server) {
-        return new ServerDTO()
+    public ServerDto toServerDTO(Server server) {
+        return new ServerDto()
                 .setId(server.getId())
                 .setChannels(server.getChannels().stream().map(channelMapper::toDto).collect(Collectors.toSet()))
                 .setMembers(server.getMembers().stream().map(memberMapper::toDto).collect(Collectors.toSet()))
@@ -35,7 +35,7 @@ public class ServerMapper {
     }
 
     @Transactional
-    public Server fromDTO(ServerDTO serverDTO) {
+    public Server fromDTO(ServerDto serverDTO) {
         return new Server()
                 .setId(serverDTO.getId())
                 .setChannels(serverDTO.getChannels().stream().map(channelMapper::fromDto).collect(Collectors.toSet()))
