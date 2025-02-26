@@ -3,6 +3,7 @@ package com.discordclone.api.service;
 import com.discordclone.api.dto.CreateServerDto;
 import com.discordclone.api.dto.ErrorResponseDto;
 import com.discordclone.api.dto.ServerDto;
+import com.discordclone.api.exception.InvalidInputException;
 import com.discordclone.api.model.Channel;
 import com.discordclone.api.model.Member;
 import com.discordclone.api.model.Profile;
@@ -106,21 +107,34 @@ public class ServerService {
     }
 
     // Get server by ID
-    public Optional<Server> getServerById(UUID id) { return serverRepository.findById(id); }
+    public Server getServerById(UUID id) {
+        if (id == null) {
+            throw new InvalidInputException("Valid is required");
+        }
 
-    public Optional<Server> updateServer(UUID id, Server updatedServer) {
+        Optional<Server> server = serverRepository.findById(id);
+
+       if (server.isEmpty()) {
+           //TODO: create custom exception
+           throw new RuntimeException();
+       }
+
+        return server.get();
+    }
+
+    public ServerDto updateServer(UUID id, ServerDto updatedServer) {
         Optional<Server> existingServer = serverRepository.findById(id);
 
-        if (existingServer.isPresent()) {
+        if (existingServer.isEmpty()) {
+            throw new RuntimeException();
+        } else {
             Server server = existingServer.get();
             server.setName(updatedServer.getName());
             server.setImageUrl(updatedServer.getImageUrl());
             server.setChannels(server.getChannels());
             server.setMembers(server.getMembers());
-            return Optional.of(serverRepository.save(server));
+            return serverMapper.toServerDTO(serverRepository.save(server));
         }
-
-        return Optional.empty();
     }
 
     public boolean deleteServer(UUID id) {
