@@ -88,7 +88,7 @@ You need to run both the backend and frontend servers simultaneously.
 ### Backend (Spring Boot)
 
 1.  Ensure you are in the `backend` directory.
-2.  Run the application using Maven or Gradle:
+2.  Run the application using Maven:
 
     ```bash
     mvn spring-boot:run
