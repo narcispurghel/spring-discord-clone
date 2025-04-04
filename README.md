@@ -34,17 +34,17 @@ Before you begin, ensure you have the following installed on your system:
 
 The project is organized into two main directories:
 [project-root]/
-├── backend/        
-│   ├── src/
-│   ├── pom.xml       
-│   └── ...
-├── frontend/        
-│   ├── src/
-│   ├── angular.json
-│   ├── package.json
-│   └── ...
-├── .gitignore
-└── README.md
+├── backend/  
+│   ├── src/  
+│   ├── pom.xml         
+│   └── ...  
+├── frontend/          
+│   ├── src/  
+│   ├── angular.json  
+│   ├── package.json  
+│   └── ...  
+├── .gitignore  
+└── README.md  
 
 ## Setup
 
@@ -61,7 +61,6 @@ The project is organized into two main directories:
         ```
     * Install dependencies using Maven or Gradle:
         ```bash
-        # Using Maven
         mvn clean install
         ```
     * Configure database connection details in `src/main/resources/application.properties`.
