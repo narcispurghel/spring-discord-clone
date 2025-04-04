@@ -33,7 +33,7 @@ Before you begin, ensure you have the following installed on your system:
 ## Project Structure
 
 The project is organized into two main directories:
-[project-root]/
+[project-root]/  
 ├── backend/  
 │   ├── src/  
 │   ├── pom.xml         
