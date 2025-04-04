@@ -1,0 +1,31 @@
+<button
+  class="text-md flex h-12 w-full items-center justify-between border-b-2 border-neutral-200 px-3 font-medium text-white transition hover:bg-zinc-700/10 dark:border-neutral-800 dark:hover:bg-zinc-700/50"
+  [matMenuTriggerFor]="menu"
+  #trigger="matMenuTrigger"
+>
+  {{ server.name }}
+  <mat-icon>{{ trigger.menuOpen ? 'expand_less' : 'expand_more' }}</mat-icon>
+</button>
+
+<mat-menu
+  #menu="matMenu"
+  class="ml-2 mt-1 py-3 space-y-[2px] !rounded-lg px-2 text-xs font-medium text-black dark:!bg-black dark:text-neutral-400"
+>
+  <div class="flex w-52 flex-col gap-1">
+    @for (option of headerOptions; track option.type) {
+      @if (canDisplayOption(option.canAccess)) {
+        <button
+          (click)="onMenuItemClicked(option.type)"
+          mat-menu-item
+          [class]="option.class"
+        >
+          <span> {{ option.textKey | translate }}</span>
+          <mat-icon [class]="option.iconClass">{{ option.iconType }}</mat-icon>
+        </button>
+        @if (option.type === 'create-channel') {
+          <mat-divider class="h-[1px] bg-zinc-300 dark:bg-zinc-700" />
+        }
+      }
+    }
+  </div>
+</mat-menu>

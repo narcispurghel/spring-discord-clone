@@ -1,0 +1,15 @@
+<mat-sidenav-container>
+  <mat-sidenav (closed)="onCloseSidenav()">
+    <app-sidenav-content (onItemClicked)="onCloseSidenav()"
+  /></mat-sidenav>
+  <mat-sidenav-content
+    ><div class="h-full">
+      <div class="fixed inset-y-0 z-30 hidden h-full w-[72px] flex-col md:flex">
+        <app-navbar />
+      </div>
+      <main class="h-full md:pl-[72px]">
+        <router-outlet />
+      </main>
+    </div>
+  </mat-sidenav-content>
+</mat-sidenav-container>
