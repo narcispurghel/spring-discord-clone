@@ -18,7 +18,7 @@ Before you begin, ensure you have the following installed on your system:
 
 * **Java Development Kit (JDK):** Version 23 or higher. [Download JDK](https://www.oracle.com/java/technologies/downloads/)
 * **Maven or Gradle:** The build tool used by the Spring Boot backend.
-    * Maven: Version 4.0.0+ ([Download Maven](https://maven.apache.org/download.cgi))
+    * Maven: Version 4.0.0+ [Download Maven](https://maven.apache.org/download.cgi)
 * **Node.js and npm:** Required for the Angular frontend.
     * Node.js: Version 22.x or higher. [Download Node.js](https://nodejs.org/)
     * npm: Usually comes with Node.js (Version 10.x or higher recommended).
