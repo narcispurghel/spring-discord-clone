@@ -1,0 +1,10 @@
+<div *ngIf="sidenavOpen$ | async" class="flex gap-0 p-0">
+  <div className="w-[72px]">
+    <app-navbar />
+  </div>
+  <app-server-sidebar
+    *ngIf="serverAndUser$ | async as data"
+    [server]="data.server"
+    [user]="data.user"
+  />
+</div>
