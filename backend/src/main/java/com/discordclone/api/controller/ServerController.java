@@ -24,8 +24,8 @@ import java.util.UUID;
 @RestController
 @Transactional
 @RequestMapping("/api")
+//TODO create specific responses types for every request
 public class    ServerController {
-
     private final ServerService serverService;
     private final ServerRepository serverRepository;
     private final ServerMapper serverMapper;
