@@ -55,7 +55,6 @@ public class SecurityConfiguration {
 
     @Bean
     public AuthenticationProvider authenticationProvider() {
-        // Use DAO Authentication Provider with the custom UserDetailsService and PasswordEncoder
         DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
         provider.setUserDetailsService(userDetailsService);
         provider.setPasswordEncoder(passwordEncoder());
@@ -64,7 +63,6 @@ public class SecurityConfiguration {
 
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception {
-        // Get the AuthenticationManager from the provided configuration
         return configuration.getAuthenticationManager();
     }
 
