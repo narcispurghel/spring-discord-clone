@@ -11,15 +11,18 @@ import java.io.IOException;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 @Component
 public class WebSocketHandler extends TextWebSocketHandler {
-
+    private static final Logger LOGGER = LoggerFactory.getLogger(WebSocketHandler.class);
     private final List<WebSocketSession> sessions = new CopyOnWriteArrayList<>();
 
     @Override
     public void afterConnectionEstablished(@NotNull WebSocketSession session) {
         sessions.add(session);
-        System.out.println("WebSocket connection established: " + session.getId());
+        LOGGER.info("WebSocket connection established: {}", session.getId());
     }
 
     @Override
@@ -32,7 +35,7 @@ public class WebSocketHandler extends TextWebSocketHandler {
                 try {
                     s.sendMessage(new TextMessage("Received: " + payload));
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    LOGGER.error("Error sending message", e);
                 }
             }
         }
@@ -42,6 +45,6 @@ public class WebSocketHandler extends TextWebSocketHandler {
     public void afterConnectionClosed(@NotNull WebSocketSession session,
                                       @NotNull CloseStatus status) {
         sessions.remove(session);
-        System.out.println("WebSocket connection closed: " + session.getId());
+        LOGGER.info("WebSocket connection closed: {}", session.getId());
     }
 }
