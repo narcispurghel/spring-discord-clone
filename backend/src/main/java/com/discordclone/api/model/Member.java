@@ -13,14 +13,13 @@ import java.util.UUID;
 @Entity
 @Table(name = "members")
 public class Member {
-
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "member_id")
     private UUID id;
 
     @Column(name = "member_role")
-    private Role role = Role.ADMIN;
+    private Role role = Role.MEMBER;
 
     @Column(name = "created_at")
     @CreationTimestamp

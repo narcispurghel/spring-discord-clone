@@ -3,29 +3,21 @@ package com.discordclone.api.util.mapper;
 import com.discordclone.api.dto.ServerDto;
 import com.discordclone.api.model.Server;
 import com.discordclone.api.repository.ProfileRepository;
-import jakarta.transaction.Transactional;
-import org.springframework.stereotype.Component;
 
 import java.util.stream.Collectors;
 
-@Component
-public class ServerMapper {
-    private final ProfileRepository profileRepository;
-    private final ChannelMapper channelMapper;
-    private final MemberMapper memberMapper;
+public final class ServerMapper {
+    private static ProfileRepository profileRepository;
 
-    public ServerMapper(
-            ProfileRepository profileRepository, ChannelMapper channelMapper, MemberMapper memberMapper) {
-        this.profileRepository = profileRepository;
-        this.channelMapper = channelMapper;
-        this.memberMapper = memberMapper;
+    public ServerMapper(ProfileRepository profileRepository) {
+        ServerMapper.profileRepository = profileRepository;
     }
 
-    public ServerDto toServerDTO(Server server) {
+    public static ServerDto toServerDTO(Server server) {
         return new ServerDto()
                 .setId(server.getId())
-                .setChannels(server.getChannels().stream().map(channelMapper::toDto).collect(Collectors.toSet()))
-                .setMembers(server.getMembers().stream().map(memberMapper::toDto).collect(Collectors.toSet()))
+                .setChannels(server.getChannels().stream().map(ChannelMapper::toDto).collect(Collectors.toSet()))
+                .setMembers(server.getMembers().stream().map(MemberMapper::toDto).collect(Collectors.toSet()))
                 .setName(server.getName())
                 .setProfileId(server.getProfile().getId())
                 .setUpdatedAt(server.getUpdatedAt())
@@ -34,12 +26,11 @@ public class ServerMapper {
                 .setImageUrl(server.getImageUrl());
     }
 
-    @Transactional
-    public Server fromDTO(ServerDto serverDTO) {
+    public static Server fromDTO(ServerDto serverDTO) {
         return new Server()
                 .setId(serverDTO.getId())
-                .setChannels(serverDTO.getChannels().stream().map(channelMapper::fromDto).collect(Collectors.toSet()))
-                .setMembers(serverDTO.getMembers().stream().map(memberMapper::fromDto).collect(Collectors.toSet()))
+                .setChannels(serverDTO.getChannels().stream().map(ChannelMapper::fromDto).collect(Collectors.toSet()))
+                .setMembers(serverDTO.getMembers().stream().map(MemberMapper::fromDto).collect(Collectors.toSet()))
                 .setName(serverDTO.getName())
                 .setProfile(profileRepository.findById(serverDTO.getProfileId()).orElseThrow())
                 .setUpdatedAt(serverDTO.getUpdatedAt())

@@ -1,6 +1,5 @@
 package com.discordclone.api.service;
 
-import com.discordclone.api.dto.ChannelDto;
 import com.discordclone.api.dto.CreateChannelDto;
 import com.discordclone.api.dto.ServerDto;
 import com.discordclone.api.exception.InvalidInputException;
@@ -8,7 +7,6 @@ import com.discordclone.api.exception.RequestBodyNullException;
 import com.discordclone.api.model.Channel;
 import com.discordclone.api.model.Server;
 import com.discordclone.api.repository.ChannelRepository;
-import com.discordclone.api.util.mapper.ChannelMapper;
 import com.discordclone.api.util.mapper.ServerMapper;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
@@ -20,17 +18,11 @@ import java.util.UUID;
 public class ChannelService {
     private final ChannelRepository channelRepository;
     private final ServerService serverService;
-    private final ServerMapper serverMapper;
-    private final ChannelMapper channelMapper;
 
     public ChannelService(ChannelRepository channelRepository,
-                          ServerService serverService,
-                          ServerMapper serverMapper,
-                          ChannelMapper channelMapper) {
+                          ServerService serverService) {
         this.channelRepository = channelRepository;
         this.serverService = serverService;
-        this.serverMapper = serverMapper;
-        this.channelMapper = channelMapper;
     }
 
     public ServerDto createChannel(CreateChannelDto createChannelDto, UUID serverId) {
@@ -45,7 +37,7 @@ public class ChannelService {
 
         Channel savedChannel = channelRepository.save(channel);
 
-        return serverMapper.toServerDTO(serverService.getServerById(serverId));
+        return ServerMapper.toServerDTO(serverService.getServerById(serverId));
     }
 
     private void validateCreateChannelDto(CreateChannelDto channelDto) {

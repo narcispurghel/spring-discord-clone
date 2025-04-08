@@ -3,21 +3,17 @@ package com.discordclone.api.util.mapper;
 import com.discordclone.api.dto.MemberDto;
 import com.discordclone.api.model.Member;
 import com.discordclone.api.repository.ProfileRepository;
-import org.springframework.stereotype.Component;
 
 import java.util.HashSet;
 
-@Component
-public class MemberMapper {
-    private final ProfileRepository profileRepository;
-    private final ProfileMapper profileMapper;
+public final class MemberMapper {
+    private static ProfileRepository profileRepository;
 
-    public MemberMapper(ProfileRepository profileRepository, ProfileMapper profileMapper) {
-        this.profileRepository = profileRepository;
-        this.profileMapper = profileMapper;
+    public MemberMapper(ProfileRepository profileRepository) {
+        MemberMapper.profileRepository = profileRepository;
     }
 
-    public MemberDto toDto(Member member) {
+    public static MemberDto toDto(Member member) {
         return new MemberDto(
                 member.getId(),
                 member.getRole(),
@@ -25,11 +21,11 @@ public class MemberMapper {
                 member.getProfile().getId(),
                 member.getCreatedAt(),
                 member.getUpdatedAt(),
-                profileMapper.toProfileDTO(member.getProfile())
+                ProfileMapper.toProfileDTO(member.getProfile())
         );
     }
 
-    public Member fromDto(MemberDto memberDto) {
+    public static Member fromDto(MemberDto memberDto) {
         return new Member()
                 .setProfile(profileRepository.findById(memberDto.profileId()).orElseThrow())
                 .setRole(memberDto.role())

@@ -31,47 +31,37 @@ public class AuthenticationController {
     @PostMapping("/register")
     public ResponseEntity<ProfileDto> register(@RequestBody(required = false) RegisterUserDto registerUserDto,
                                                HttpServletResponse response) {
-        try {
-            ProfileDto registeredProfile = authenticationService.register(registerUserDto);
-            final String jwtToken = jwtService.generateToken(userDetailsServiceImplementation.loadUserByUsername(registeredProfile.getEmail()));
+        ProfileDto registeredProfile = authenticationService.register(registerUserDto);
+        final String jwtToken = jwtService.generateToken(userDetailsServiceImplementation.loadUserByUsername(registeredProfile.getEmail()));
 
-            Cookie cookie = new Cookie("Jwt", jwtToken);
-            cookie.setPath("/");
-            cookie.setHttpOnly(true);
-            cookie.setMaxAge(36000);
+        Cookie cookie = new Cookie("Jwt", jwtToken);
+        cookie.setPath("/");
+        cookie.setHttpOnly(true);
+        cookie.setMaxAge(36000);
 
-            response.addCookie(cookie);
+        response.addCookie(cookie);
 
-            return new ResponseEntity<>(registeredProfile, HttpStatus.CREATED);
-        }
-        catch (Exception e) {
-            throw e;
-        }
+        return new ResponseEntity<>(registeredProfile, HttpStatus.CREATED);
     }
 
     @PostMapping("/login")
     public ResponseEntity<LoginResponseDto> authenticate(@RequestBody(required = false) LoginUserDto loginUserDto,
                                                        HttpServletResponse response) {
-        try {
-            ProfileDto authenticatedProfile = authenticationService.authenticate(loginUserDto);
-            String jwtToken = jwtService.generateToken(userDetailsServiceImplementation.loadUserByUsername(authenticatedProfile.getEmail()));
+        ProfileDto authenticatedProfile = authenticationService.authenticate(loginUserDto);
+        String jwtToken = jwtService.generateToken(userDetailsServiceImplementation.loadUserByUsername(authenticatedProfile.getEmail()));
 
-            Cookie cookie = new Cookie("Jwt", jwtToken);
-            cookie.setPath("/");
-            cookie.setHttpOnly(true);
-            cookie.setMaxAge(36000);
+        Cookie cookie = new Cookie("Jwt", jwtToken);
+        cookie.setPath("/");
+        cookie.setHttpOnly(true);
+        cookie.setMaxAge(36000);
 
-            response.addCookie(cookie);
+        response.addCookie(cookie);
 
-            LoginResponseDto loginResponse = new LoginResponseDto()
-                    .setToken(jwtToken)
-                    .setExpiresIn(jwtService.getExpirationTime());
+        LoginResponseDto loginResponse = new LoginResponseDto()
+                .setToken(jwtToken)
+                .setExpiresIn(jwtService.getExpirationTime());
 
-            return ResponseEntity.ok(loginResponse);
-        }
-        catch (Exception e) {
-            throw e;
-        }
+        return ResponseEntity.ok(loginResponse);
     }
 
     @GetMapping("/logout")
@@ -80,6 +70,6 @@ public class AuthenticationController {
         Cookie cookie = new Cookie("Jwt", null);
         response.addCookie(cookie);
 
-        return ResponseEntity.status(401).body("Logout success!");
+        return ResponseEntity.status(200).body("Logout success!");
     }
 }

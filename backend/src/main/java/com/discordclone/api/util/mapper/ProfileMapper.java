@@ -2,11 +2,9 @@ package com.discordclone.api.util.mapper;
 
 import com.discordclone.api.dto.ProfileDto;
 import com.discordclone.api.model.Profile;
-import org.springframework.stereotype.Component;
 
-@Component
-public class ProfileMapper {
-    public ProfileDto toProfileDTO(Profile profile) {
+public final class ProfileMapper {
+    public static ProfileDto toProfileDTO(Profile profile) {
         if (profile == null) {
             return null;
         }
@@ -19,7 +17,7 @@ public class ProfileMapper {
                 .setUpdatedAt(profile.getUpdatedAt());
     }
 
-    public Profile toProfile(ProfileDto profileDTO) {
+    public static Profile toProfile(ProfileDto profileDTO) {
         if (profileDTO == null) {
             return null;
         }
