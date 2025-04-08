@@ -2,7 +2,6 @@ package com.discordclone.api.model;
 
 import com.discordclone.api.util.ChannelType;
 import jakarta.persistence.*;
-import jakarta.transaction.Transactional;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -10,7 +9,6 @@ import java.util.Date;
 import java.util.UUID;
 
 @Entity
-@Transactional
 public class Channel {
 
     @Id
