@@ -3,7 +3,6 @@ package com.discordclone.api.controller;
 import com.discordclone.api.dto.auth.LoginUserDto;
 import com.discordclone.api.dto.ProfileDto;
 import com.discordclone.api.dto.auth.RegisterUserDto;
-import com.discordclone.api.exception.RequestBodyNullException;
 import com.discordclone.api.service.AuthenticationService;
 import com.discordclone.api.security.JwtService;
 import com.discordclone.api.security.UserDetailsServiceImplementation;
@@ -30,9 +29,8 @@ public class AuthenticationController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<?> register(@RequestBody(required = false) RegisterUserDto registerUserDto,
+    public ResponseEntity<ProfileDto> register(@RequestBody(required = false) RegisterUserDto registerUserDto,
                                                HttpServletResponse response) {
-
         try {
             ProfileDto registeredProfile = authenticationService.register(registerUserDto);
             final String jwtToken = jwtService.generateToken(userDetailsServiceImplementation.loadUserByUsername(registeredProfile.getEmail()));
@@ -52,7 +50,7 @@ public class AuthenticationController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<?> authenticate(@RequestBody(required = false) LoginUserDto loginUserDto,
+    public ResponseEntity<LoginResponseDto> authenticate(@RequestBody(required = false) LoginUserDto loginUserDto,
                                                        HttpServletResponse response) {
         try {
             ProfileDto authenticatedProfile = authenticationService.authenticate(loginUserDto);
