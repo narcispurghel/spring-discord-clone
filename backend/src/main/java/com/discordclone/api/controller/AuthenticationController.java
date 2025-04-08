@@ -70,6 +70,6 @@ public class AuthenticationController {
         Cookie cookie = new Cookie("Jwt", null);
         response.addCookie(cookie);
 
-        return ResponseEntity.status(401).body("Logout success!");
+        return ResponseEntity.status(200).body("Logout success!");
     }
 }
