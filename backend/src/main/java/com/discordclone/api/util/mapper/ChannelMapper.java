@@ -3,17 +3,15 @@ package com.discordclone.api.util.mapper;
 import com.discordclone.api.dto.ChannelDto;
 import com.discordclone.api.model.Channel;
 import com.discordclone.api.repository.ServerRepository;
-import org.springframework.stereotype.Component;
 
-@Component
-public class ChannelMapper {
-    private final ServerRepository serverRepository;
+public final class ChannelMapper {
+    private static ServerRepository serverRepository;
 
     public ChannelMapper(ServerRepository serverRepository) {
-        this.serverRepository = serverRepository;
+        ChannelMapper.serverRepository = serverRepository;
     }
 
-    public ChannelDto toDto(Channel channel) {
+    public static ChannelDto toDto(Channel channel) {
         return new ChannelDto(
                 channel.getId(),
                 channel.getChannelName(),
@@ -24,7 +22,7 @@ public class ChannelMapper {
         );
     }
 
-    public Channel fromDto(ChannelDto channelDto) {
+    public static Channel fromDto(ChannelDto channelDto) {
         return new Channel()
                 .setChannelName(channelDto.name())
                 .setId(channelDto.id())

@@ -31,7 +31,6 @@ public class ServerService {
     private final ProfileService profileService;
     private final ChannelRepository channelRepository;
     private final MemberService memberService;
-    private final ServerMapper serverMapper;
     private final MemberRepository memberRepository;
 
     public ServerService(
@@ -40,7 +39,6 @@ public class ServerService {
             ProfileService profileService,
             ChannelRepository channelRepository,
             MemberService memberService,
-            ServerMapper serverMapper,
             MemberRepository memberRepository
     ) {
         this.serverRepository = serverRepository;
@@ -48,7 +46,6 @@ public class ServerService {
         this.profileService = profileService;
         this.channelRepository = channelRepository;
         this.memberService = memberService;
-        this.serverMapper = serverMapper;
         this.memberRepository = memberRepository;
     }
 
@@ -98,7 +95,7 @@ public class ServerService {
             channelRepository.save(savedChannel);
             memberRepository.save(savedMember);
 
-            ServerDto serverDTO = serverMapper.toServerDTO(savedServer);
+            ServerDto serverDTO = ServerMapper.toServerDTO(savedServer);
 
             return new ResponseEntity<>(serverDTO, HttpStatus.CREATED);
         }
@@ -133,7 +130,7 @@ public class ServerService {
             server.setImageUrl(updatedServer.getImageUrl());
             server.setChannels(server.getChannels());
             server.setMembers(server.getMembers());
-            return serverMapper.toServerDTO(serverRepository.save(server));
+            return ServerMapper.toServerDTO(serverRepository.save(server));
         }
     }
 
@@ -155,6 +152,6 @@ public class ServerService {
             return new HashSet<>();
         }
 
-        return servers.stream().map(serverMapper::toServerDTO).collect(Collectors.toSet());
+        return servers.stream().map(ServerMapper::toServerDTO).collect(Collectors.toSet());
     }
 }

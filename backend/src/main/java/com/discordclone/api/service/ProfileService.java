@@ -21,12 +21,9 @@ import java.util.Optional;
 @Transactional
 public class ProfileService {
     private final ProfileRepository profileRepository;
-    private final ProfileMapper profileMapper;
 
-    public ProfileService(ProfileRepository profileRepository,
-                          ProfileMapper profileMapper) {
+    public ProfileService(ProfileRepository profileRepository) {
         this.profileRepository = profileRepository;
-        this.profileMapper = profileMapper;
     }
 
     public Optional<Profile> getUserByEmail(String username) {
@@ -54,7 +51,7 @@ public class ProfileService {
         profile.setImageUrl(updated.profileImage());
         profile.setName(updated.username());
 
-        return profileMapper.toProfileDTO(profileRepository.save(profile));
+        return ProfileMapper.toProfileDTO(profileRepository.save(profile));
     }
 
     private void validateUpdateProfileRequest(UpdateProfileDto updateProfileDto) {

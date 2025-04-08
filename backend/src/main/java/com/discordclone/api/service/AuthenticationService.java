@@ -22,18 +22,15 @@ public class AuthenticationService {
     private final ProfileRepository profileRepository;
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;
-    private final ProfileMapper profileMapper;
 
     public AuthenticationService(
             ProfileRepository profileRepository,
             AuthenticationManager authenticationManager,
-            PasswordEncoder passwordEncoder,
-            ProfileMapper profileMapper
+            PasswordEncoder passwordEncoder
     ) {
         this.authenticationManager = authenticationManager;
         this.profileRepository = profileRepository;
         this.passwordEncoder = passwordEncoder;
-        this.profileMapper = profileMapper;
     }
 
     public ProfileDto register(RegisterUserDto input) {
@@ -44,7 +41,7 @@ public class AuthenticationService {
                 .setEmail(input.getEmail())
                 .setPassword(passwordEncoder.encode(input.getPassword()));
 
-        return profileMapper.toProfileDTO(profileRepository.save(profile));
+        return ProfileMapper.toProfileDTO(profileRepository.save(profile));
     }
     private void validateRegisterUserDto(RegisterUserDto registerUserDto) {
         if (registerUserDto == null) {
@@ -82,7 +79,7 @@ public class AuthenticationService {
             throw new UsernameNotFoundException("User " + input.getUsername() + " not found!");
         }
 
-        return profileMapper.toProfileDTO(profile.get());
+        return ProfileMapper.toProfileDTO(profile.get());
     }
 
     private void validateLoginUserDto(LoginUserDto loginUserDto) {
