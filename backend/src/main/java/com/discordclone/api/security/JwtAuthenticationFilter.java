@@ -15,6 +15,8 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import org.springframework.web.servlet.HandlerExceptionResolver;
 
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.Optional;
 
 @Component
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
@@ -37,15 +39,13 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             @NonNull HttpServletResponse response,
             @NonNull FilterChain filterChain
     ) throws ServletException, IOException {
-        String token = null;
 
-        if(request.getCookies() != null) {
-            for(Cookie cookie: request.getCookies()) {
-                if(cookie.getName().equals("Jwt")) {
-                    token = cookie.getValue();
-                }
-            }
-        }
+        String token = Optional.ofNullable(request.getCookies())
+                .flatMap(cookies -> Arrays.stream(cookies)
+                        .filter(cookie -> "Jwt".equals(cookie.getName()))
+                        .findFirst()
+                        .map(Cookie::getValue))
+                .orElse(null);
 
         if(token == null) {
             filterChain.doFilter(request, response);
