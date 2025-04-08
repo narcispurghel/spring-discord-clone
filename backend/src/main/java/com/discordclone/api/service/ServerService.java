@@ -149,7 +149,7 @@ public class ServerService {
     }
 
     public Set<ServerDto> getAllServersByProfileId(UUID profileId) {
-        Set<Server> servers = serverRepository.findAllAsSetByProfileId(profileId);
+        Set<Server> servers = serverRepository.findAllAsSetByProfile_Id(profileId);
 
         if (servers.isEmpty()) {
             return new HashSet<>();
