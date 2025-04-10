@@ -5,7 +5,7 @@ import com.discordclone.api.dto.ServerDto;
 import com.discordclone.api.exception.InvalidInputException;
 import com.discordclone.api.model.Profile;
 import com.discordclone.api.repository.ProfileRepository;
-import com.discordclone.api.service.ChannelService;
+import com.discordclone.api.service.impl.ChannelServiceImpl;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -17,11 +17,11 @@ import java.util.UUID;
 @RestController
 @RequestMapping("/api/channels")
 public class ChannelController {
-    private final ChannelService channelService;
+    private final ChannelServiceImpl channelServiceImpl;
     private final ProfileRepository profileRepository;
 
-    public ChannelController(ChannelService channelService, ProfileRepository profileRepository) {
-        this.channelService = channelService;
+    public ChannelController(ChannelServiceImpl channelServiceImpl, ProfileRepository profileRepository) {
+        this.channelServiceImpl = channelServiceImpl;
         this.profileRepository = profileRepository;
     }
 
@@ -33,7 +33,7 @@ public class ChannelController {
             Optional<Profile> profile = profileRepository.getProfileByEmail(authentication.getName());
 
             if (profile.isPresent()) {
-                ServerDto serverDto = channelService.createChannel(newChannel, serverId, profile.get().getId());
+                ServerDto serverDto = channelServiceImpl.createChannel(newChannel, serverId, profile.get().getId());
 
                 return ResponseEntity.status(HttpStatus.CREATED).body(serverDto);
             } else {

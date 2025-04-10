@@ -3,7 +3,7 @@ package com.discordclone.api.controller;
 import com.discordclone.api.dto.auth.LoginUserDto;
 import com.discordclone.api.dto.ProfileDto;
 import com.discordclone.api.dto.auth.RegisterUserDto;
-import com.discordclone.api.service.AuthenticationService;
+import com.discordclone.api.service.impl.AuthenticationServiceImpl;
 import com.discordclone.api.security.JwtService;
 import com.discordclone.api.security.UserDetailsServiceImplementation;
 import com.discordclone.api.dto.auth.LoginResponseDto;
@@ -17,21 +17,21 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 public class AuthenticationController {
     private final JwtService jwtService;
-    private final AuthenticationService authenticationService;
+    private final AuthenticationServiceImpl authenticationServiceImpl;
     private final UserDetailsServiceImplementation userDetailsServiceImplementation;
 
     public AuthenticationController(JwtService jwtService,
-                                    AuthenticationService authenticationService,
+                                    AuthenticationServiceImpl authenticationServiceImpl,
                                     UserDetailsServiceImplementation userDetailsServiceImplementation) {
         this.jwtService = jwtService;
-        this.authenticationService = authenticationService;
+        this.authenticationServiceImpl = authenticationServiceImpl;
         this.userDetailsServiceImplementation = userDetailsServiceImplementation;
     }
 
     @PostMapping("/register")
     public ResponseEntity<ProfileDto> register(@RequestBody RegisterUserDto registerUserDto,
                                                HttpServletResponse response) {
-        ProfileDto registeredProfile = authenticationService.register(registerUserDto);
+        ProfileDto registeredProfile = authenticationServiceImpl.register(registerUserDto);
         final String jwtToken = jwtService.generateToken(userDetailsServiceImplementation.loadUserByUsername(registeredProfile.getEmail()));
 
         Cookie cookie = new Cookie("Jwt", jwtToken);
@@ -47,7 +47,7 @@ public class AuthenticationController {
     @PostMapping("/login")
     public ResponseEntity<LoginResponseDto> authenticate(@RequestBody(required = false) LoginUserDto loginUserDto,
                                                        HttpServletResponse response) {
-        ProfileDto authenticatedProfile = authenticationService.authenticate(loginUserDto);
+        ProfileDto authenticatedProfile = authenticationServiceImpl.authenticate(loginUserDto);
         String jwtToken = jwtService.generateToken(userDetailsServiceImplementation.loadUserByUsername(authenticatedProfile.getEmail()));
 
         Cookie cookie = new Cookie("Jwt", jwtToken);

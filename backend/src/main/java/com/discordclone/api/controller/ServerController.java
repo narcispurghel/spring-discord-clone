@@ -3,13 +3,10 @@ package com.discordclone.api.controller;
 import com.discordclone.api.dto.CreateServerDto;
 import com.discordclone.api.dto.ProfileDto;
 import com.discordclone.api.dto.ServerDto;
-import com.discordclone.api.exception.InvalidInputException;
-import com.discordclone.api.model.Profile;
-import com.discordclone.api.model.Server;
 import com.discordclone.api.repository.ProfileRepository;
 import com.discordclone.api.repository.ServerRepository;
-import com.discordclone.api.service.ProfileService;
-import com.discordclone.api.service.ServerService;
+import com.discordclone.api.service.impl.ProfileServiceImpl;
+import com.discordclone.api.service.impl.ServerServiceImpl;
 import com.discordclone.api.util.mapper.ProfileMapper;
 import com.discordclone.api.util.mapper.ServerMapper;
 import jakarta.servlet.http.HttpServletRequest;
@@ -29,20 +26,20 @@ import java.util.UUID;
 @RequestMapping("/api")
 //TODO create specific responses types for every request
 public class    ServerController {
-    private final ServerService serverService;
+    private final ServerServiceImpl serverServiceImpl;
     private final ServerRepository serverRepository;
     private final ProfileRepository profileRepository;
-    private final ProfileService profileService;
+    private final ProfileServiceImpl profileServiceImpl;
 
     public ServerController(
-            ServerService serverService,
+            ServerServiceImpl serverServiceImpl,
             ServerRepository serverRepository,
             ProfileRepository profileRepository,
-            ProfileService profileService) {
-        this.serverService = serverService;
+            ProfileServiceImpl profileServiceImpl) {
+        this.serverServiceImpl = serverServiceImpl;
         this.serverRepository = serverRepository;
         this.profileRepository = profileRepository;
-        this.profileService = profileService;
+        this.profileServiceImpl = profileServiceImpl;
     }
 
     @GetMapping("/servers")
@@ -52,7 +49,7 @@ public class    ServerController {
         Optional<ProfileDto> currentUser = profileRepository.findByEmail(authentication.getName()).map(ProfileMapper::toProfileDTO);
 
         if (currentUser.isPresent()) {
-            return ResponseEntity.status(HttpStatus.OK).body(serverService.getAllServersByProfileId(currentUser.get().getId()));
+            return ResponseEntity.status(HttpStatus.OK).body(serverServiceImpl.getAllServersByProfileId(currentUser.get().getId()));
         }
 
         throw new UsernameNotFoundException("User does not exist");
@@ -60,18 +57,16 @@ public class    ServerController {
 
     @PostMapping("/servers")
     //TODO replace anonymous returned type with a specific one
-    public ResponseEntity<?> createServer(@RequestBody CreateServerDto createServerDto,
-                                          HttpServletRequest request,
-                                          Authentication authentication) {
-        return serverService.createServer(createServerDto, request, authentication);
+    public ResponseEntity<?> createServer(@RequestBody CreateServerDto createServerDto, Authentication authentication) {
+        return serverServiceImpl.createServer(createServerDto, authentication);
     }
 
     @GetMapping("/servers/{id}/server-with-channels-members-and-profiles")
     public ResponseEntity<ServerDto> getServerById(@PathVariable("id") UUID id) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
-        UUID profileId = profileService.getProfileIdFromAuth(authentication);
-        ServerDto response = ServerMapper.toServerDTO(serverService.getServerById(id), profileId);
+        UUID profileId = profileServiceImpl.getProfileIdFromAuth(authentication);
+        ServerDto response = ServerMapper.toServerDTO(serverServiceImpl.getServerById(id), profileId);
 
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
