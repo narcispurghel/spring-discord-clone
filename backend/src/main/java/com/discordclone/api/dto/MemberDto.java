@@ -11,7 +11,6 @@ public record MemberDto(
         UUID profileId,
         UUID serverId,
         Date createdAt,
-        Date updatedAt,
-        ProfileDto profile
+        Date updatedAt
 ) {
 }

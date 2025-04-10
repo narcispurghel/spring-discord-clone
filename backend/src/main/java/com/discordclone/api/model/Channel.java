@@ -9,7 +9,7 @@ import java.util.UUID;
 @Entity
 public class Channel {
     @Id
-    @Column(name = "channel_id")
+    @Column(nullable = false)
     @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID id;
 
@@ -25,20 +25,15 @@ public class Channel {
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
-    @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "server_id")
-    private Server server;
-
     public Channel() {
         createdAt = LocalDateTime.now();
     }
 
-    public Channel(String channelName, ChannelType type, LocalDateTime updatedAt, Server server){
+    public Channel(String channelName, ChannelType type, LocalDateTime updatedAt){
         this();
         this.channelName = channelName;
         this.type = type;
         this.updatedAt = updatedAt;
-        this.server = server;
     }
 
     public ChannelType getType() {
@@ -83,15 +78,6 @@ public class Channel {
 
     public Channel setUpdatedAt(LocalDateTime updatedAt) {
         this.updatedAt = updatedAt;
-        return this;
-    }
-
-    public Server getServer() {
-        return server;
-    }
-
-    public Channel setServer(Server server) {
-        this.server = server;
         return this;
     }
 

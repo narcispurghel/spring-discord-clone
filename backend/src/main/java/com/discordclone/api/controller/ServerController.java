@@ -3,6 +3,8 @@ package com.discordclone.api.controller;
 import com.discordclone.api.dto.CreateServerDto;
 import com.discordclone.api.dto.ProfileDto;
 import com.discordclone.api.dto.ServerDto;
+import com.discordclone.api.exception.InvalidInputException;
+import com.discordclone.api.model.Profile;
 import com.discordclone.api.model.Server;
 import com.discordclone.api.repository.ProfileRepository;
 import com.discordclone.api.repository.ServerRepository;
@@ -64,9 +66,11 @@ public class    ServerController {
     @GetMapping("/servers/{id}/server-with-channels-members-and-profiles")
     public ResponseEntity<?> getServerById(@PathVariable("id") UUID id) {
         Optional<Server> server = serverRepository.findById(id);
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        Optional<Profile> profile = Optional.ofNullable(profileRepository.findByEmail(authentication.getName()).orElseThrow(() -> new InvalidInputException("Invalid profile id")));
 
-        if(server.isPresent()) {
-            ServerDto response = ServerMapper.toServerDTO(server.get());
+        if(server.isPresent() && profile.isPresent()) {
+            ServerDto response = ServerMapper.toServerDTO(server.get(), profile.get().getId());
             return new ResponseEntity<>(response, HttpStatus.OK);
         } else {
             return new ResponseEntity<>("Server " + id + " not found!", HttpStatus.NOT_FOUND);

@@ -6,8 +6,6 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
 import java.util.UUID;
 
 @Entity
@@ -15,7 +13,7 @@ import java.util.UUID;
 public class Member {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "member_id")
+    @Column(nullable = false)
     private UUID id;
 
     @Column(name = "member_role")
@@ -28,22 +26,6 @@ public class Member {
     @Column(name = "updated_at")
     @UpdateTimestamp
     private Date updatedAt;
-
-    @ManyToMany(mappedBy = "members")
-    private Set<Server> servers = new HashSet<>();
-
-    @ManyToOne
-    @JoinColumn(name = "profile_id")
-    private Profile profile;
-
-    public Set<Server> getServers() {
-        return servers;
-    }
-
-    public Member setServers(Set<Server> servers) {
-        this.servers = servers;
-        return this;
-    }
 
     public UUID getId() {
         return id;
@@ -78,15 +60,6 @@ public class Member {
 
     public Member setUpdatedAt(Date updatedAt) {
         this.updatedAt = updatedAt;
-        return this;
-    }
-
-    public Profile getProfile() {
-        return profile;
-    }
-
-    public Member setProfile(Profile profile) {
-        this.profile = profile;
         return this;
     }
 }

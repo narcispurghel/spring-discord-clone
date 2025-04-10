@@ -9,6 +9,7 @@ import com.discordclone.api.model.Server;
 import com.discordclone.api.repository.ChannelRepository;
 import com.discordclone.api.util.mapper.ServerMapper;
 import jakarta.transaction.Transactional;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 import java.util.UUID;
@@ -25,19 +26,18 @@ public class ChannelService {
         this.serverService = serverService;
     }
 
-    public ServerDto createChannel(CreateChannelDto createChannelDto, UUID serverId) {
+    public ServerDto createChannel(CreateChannelDto createChannelDto, UUID serverId, UUID profileId) {
         validateCreateChannelDto(createChannelDto);
 
         Server server = serverService.getServerById(serverId);
 
         Channel channel = new Channel()
                 .setChannelName(createChannelDto.channelName())
-                .setType(createChannelDto.channelType())
-                .setServer(server);
+                .setType(createChannelDto.channelType());
 
         Channel savedChannel = channelRepository.save(channel);
 
-        return ServerMapper.toServerDTO(serverService.getServerById(serverId));
+        return ServerMapper.toServerDTO(serverService.getServerById(serverId), profileId);
     }
 
     private void validateCreateChannelDto(CreateChannelDto channelDto) {

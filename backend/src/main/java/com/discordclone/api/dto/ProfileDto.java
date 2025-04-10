@@ -1,12 +1,16 @@
 package com.discordclone.api.dto;
 
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.UUID;
 
 public class ProfileDto {
     private UUID id;
     private String name;
     private String email;
+    private Set<ServerDto> servers = new HashSet<>();
+    private Set<MemberDto> members = new HashSet<>();
     private String imageUrl;
     private Date createdAt;
     private Date updatedAt;
@@ -63,5 +67,21 @@ public class ProfileDto {
     public ProfileDto setUpdatedAt(Date updatedAt) {
         this.updatedAt = updatedAt;
         return this;
+    }
+
+    public Set<ServerDto> getServers() {
+        return servers;
+    }
+
+    public void setServers(Set<ServerDto> servers) {
+        this.servers = servers;
+    }
+
+    public Set<MemberDto> getMembers() {
+        return members;
+    }
+
+    public void setMembers(Set<MemberDto> members) {
+        this.members = members;
     }
 }
