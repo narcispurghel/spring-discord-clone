@@ -10,7 +10,6 @@ public class ProfileDto {
     private String name;
     private String email;
     private Set<ServerDto> servers = new HashSet<>();
-    private Set<MemberDto> members = new HashSet<>();
     private String imageUrl;
     private Date createdAt;
     private Date updatedAt;
@@ -75,13 +74,5 @@ public class ProfileDto {
 
     public void setServers(Set<ServerDto> servers) {
         this.servers = servers;
-    }
-
-    public Set<MemberDto> getMembers() {
-        return members;
-    }
-
-    public void setMembers(Set<MemberDto> members) {
-        this.members = members;
     }
 }
