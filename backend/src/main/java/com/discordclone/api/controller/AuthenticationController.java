@@ -29,7 +29,7 @@ public class AuthenticationController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<ProfileDto> register(@RequestBody(required = false) RegisterUserDto registerUserDto,
+    public ResponseEntity<ProfileDto> register(@RequestBody RegisterUserDto registerUserDto,
                                                HttpServletResponse response) {
         ProfileDto registeredProfile = authenticationService.register(registerUserDto);
         final String jwtToken = jwtService.generateToken(userDetailsServiceImplementation.loadUserByUsername(registeredProfile.getEmail()));
