@@ -47,11 +47,23 @@ public class SecurityConfiguration {
                                 .requestMatchers(HttpMethod.OPTIONS,"/**").permitAll()
                                 .requestMatchers("/api/auth/**").permitAll()
                                 .requestMatchers("/socket.io/**").permitAll()
+                                .requestMatchers(SWAGGER_PATHS).permitAll()
                                 .anyRequest().authenticated())
+                .formLogin(AbstractHttpConfigurer::disable)
+                .httpBasic(AbstractHttpConfigurer::disable)
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
     }
+
+    private final String[] SWAGGER_PATHS = {
+            "/v3/api-docs.yaml",
+            "/v3/api-docs/**",
+            "/swagger-resources/**",
+            "/swagger-ui/**",
+            "/swagger-ui.html",
+            "/webjars/**"
+    };
 
     @Bean
     public AuthenticationProvider authenticationProvider() {
