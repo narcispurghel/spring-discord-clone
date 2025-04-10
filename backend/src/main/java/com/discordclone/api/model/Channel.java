@@ -2,17 +2,14 @@ package com.discordclone.api.model;
 
 import com.discordclone.api.util.ChannelType;
 import jakarta.persistence.*;
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Entity
 public class Channel {
-
     @Id
-    @Column(name = "channel_id")
+    @Column(nullable = false)
     @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID id;
 
@@ -23,18 +20,20 @@ public class Channel {
     private ChannelType type = ChannelType.TEXT;
 
     @Column(name = "created_at", updatable = false)
-    @CreationTimestamp
-    private Date createdAt;
+    private LocalDateTime createdAt;
 
     @Column(name = "updated_at")
-    @UpdateTimestamp
-    private Date updatedAt;
-
-    @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "server_id")
-    private Server server;
+    private LocalDateTime updatedAt;
 
     public Channel() {
+        createdAt = LocalDateTime.now();
+    }
+
+    public Channel(String channelName, ChannelType type, LocalDateTime updatedAt){
+        this();
+        this.channelName = channelName;
+        this.type = type;
+        this.updatedAt = updatedAt;
     }
 
     public ChannelType getType() {
@@ -64,30 +63,21 @@ public class Channel {
         return this;
     }
 
-    public Date getCreatedAt() {
+    public LocalDateTime getCreatedAt() {
         return createdAt;
     }
 
-    public Channel setCreatedAt(Date createdAt) {
+    public Channel setCreatedAt(LocalDateTime createdAt) {
         this.createdAt = createdAt;
         return this;
     }
 
-    public Date getUpdatedAt() {
+    public LocalDateTime getUpdatedAt() {
         return updatedAt;
     }
 
-    public Channel setUpdatedAt(Date updatedAt) {
+    public Channel setUpdatedAt(LocalDateTime updatedAt) {
         this.updatedAt = updatedAt;
-        return this;
-    }
-
-    public Server getServer() {
-        return server;
-    }
-
-    public Channel setServer(Server server) {
-        this.server = server;
         return this;
     }
 

@@ -1,6 +1,5 @@
 package com.discordclone.api.model;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -13,7 +12,7 @@ import java.util.*;
 public class Profile {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(nullable = false, name = "profile_id")
+    @Column(nullable = false)
     private UUID id;
 
     @Column(nullable = false)
@@ -28,9 +27,8 @@ public class Profile {
     @Column(nullable = false)
     private String password;
 
-    @JsonManagedReference
-    @OneToMany(mappedBy = "profile")
-    private Set<Server> server = new HashSet<>();
+    @OneToMany
+    private Set<Server> servers = new HashSet<>();
 
     @CreationTimestamp
     @Column(updatable = false, name = "created_at")
@@ -40,7 +38,7 @@ public class Profile {
     @Column(name = "updated_at")
     private Date updatedAt;
 
-    @OneToMany(mappedBy = "profile")
+    @OneToMany
     private Collection<Member> member;
 
     public String getImageUrl() {
@@ -114,12 +112,12 @@ public class Profile {
         return this;
     }
 
-    public Set<Server> getServer() {
-        return server;
+    public Set<Server> getServers() {
+        return servers;
     }
 
-    public Profile setServer(Set<Server> server) {
-        this.server = server;
+    public Profile setServers(Set<Server> server) {
+        this.servers = server;
         return this;
     }
 }

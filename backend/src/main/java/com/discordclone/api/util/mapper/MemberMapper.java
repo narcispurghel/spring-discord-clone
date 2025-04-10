@@ -2,35 +2,30 @@ package com.discordclone.api.util.mapper;
 
 import com.discordclone.api.dto.MemberDto;
 import com.discordclone.api.model.Member;
-import com.discordclone.api.repository.ProfileRepository;
 
-import java.util.HashSet;
+import java.util.UUID;
 
 public final class MemberMapper {
-    private static ProfileRepository profileRepository;
 
-    public MemberMapper(ProfileRepository profileRepository) {
-        MemberMapper.profileRepository = profileRepository;
-    }
+    public static MemberDto toDto(Member member, UUID profileId, UUID serverId) {
+        if (member == null) return null;
 
-    public static MemberDto toDto(Member member) {
         return new MemberDto(
                 member.getId(),
                 member.getRole(),
-                member.getProfile().getId(),
-                member.getProfile().getId(),
+                profileId,
+                serverId,
                 member.getCreatedAt(),
-                member.getUpdatedAt(),
-                ProfileMapper.toProfileDTO(member.getProfile())
+                member.getUpdatedAt()
         );
     }
 
     public static Member fromDto(MemberDto memberDto) {
+        if (memberDto == null) return null;
+
         return new Member()
-                .setProfile(profileRepository.findById(memberDto.profileId()).orElseThrow())
                 .setRole(memberDto.role())
                 .setCreatedAt(memberDto.createdAt())
-                .setUpdatedAt(memberDto.updatedAt())
-                .setServers(new HashSet<>());
+                .setUpdatedAt(memberDto.updatedAt());
     }
 }

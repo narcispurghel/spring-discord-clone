@@ -7,7 +7,7 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
 
-@Table(name = "servers", schema = "public")
+@Table(name = "servers")
 @Entity
 public class Server {
 
@@ -25,25 +25,16 @@ public class Server {
     @Column(nullable = false, name = "invite_code")
     private UUID inviteCode;
 
-    @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "profile_id")
-    private Profile profile;
-
     @Column(updatable = false, name = "created_at")
     private LocalDateTime createdAt = LocalDateTime.now();
 
     @Column(name = "updated_at")
     private LocalDateTime updatedAt = LocalDateTime.now();
 
-    @OneToMany(mappedBy = "server")
+    @OneToMany
     private Set<Channel> channels = new HashSet<>();
 
-    @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(
-            name = "member_server",
-            joinColumns = @JoinColumn(name = "server_id"),
-            inverseJoinColumns = @JoinColumn(name = "member_id")
-    )
+    @OneToMany
     private Set<Member> members = new HashSet<>();
 
     public UUID getId() {
@@ -126,12 +117,4 @@ public class Server {
         members.add(member);
     }
 
-    public Profile getProfile() {
-        return profile;
-    }
-
-    public Server setProfile(Profile profile) {
-        this.profile = profile;
-        return this;
-    }
 }

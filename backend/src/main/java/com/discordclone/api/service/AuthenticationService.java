@@ -44,10 +44,6 @@ public class AuthenticationService {
         return ProfileMapper.toProfileDTO(profileRepository.save(profile));
     }
     private void validateRegisterUserDto(RegisterUserDto registerUserDto) {
-        if (registerUserDto == null) {
-            throw new RequestBodyNullException();
-        }
-
         if (registerUserDto.getEmail() == null) {
             throw new InvalidInputException("Username cannot be null");
         }

@@ -16,87 +16,97 @@ public class ServerDto {
     private Set<ChannelDto> channels = new HashSet<>();
     private Set<MemberDto> members = new HashSet<>();
 
-    public ServerDto() {
+    public ServerDto() {}
+
+    public ServerDto(UUID id,
+                     String name,
+                     String imageUrl,
+                     UUID inviteCode,
+                     UUID profileId,
+                     LocalDateTime createdAt,
+                     LocalDateTime updatedAt,
+                     Set<ChannelDto> channels,
+                     Set<MemberDto> members) {
+        this.id = id;
+        this.name = name;
+        this.imageUrl = imageUrl;
+        this.inviteCode = inviteCode;
+        this.profileId = profileId;
+        this.createdAt = createdAt;
+        this.updatedAt = updatedAt;
+        this.channels = channels;
+        this.members = members;
     }
 
     public UUID getId() {
         return id;
     }
 
-    public ServerDto setId(UUID id) {
+    public void setId(UUID id) {
         this.id = id;
-        return this;
     }
 
     public String getName() {
         return name;
     }
 
-    public ServerDto setName(String name) {
+    public void setName(String name) {
         this.name = name;
-        return this;
     }
 
     public String getImageUrl() {
         return imageUrl;
     }
 
-    public ServerDto setImageUrl(String imageUrl) {
+    public void setImageUrl(String imageUrl) {
         this.imageUrl = imageUrl;
-        return this;
     }
 
     public UUID getInviteCode() {
         return inviteCode;
     }
 
-    public ServerDto setInviteCode(UUID inviteCode) {
+    public void setInviteCode(UUID inviteCode) {
         this.inviteCode = inviteCode;
-        return this;
     }
 
     public UUID getProfileId() {
         return profileId;
     }
 
-    public ServerDto setProfileId(UUID profileId) {
+    public void setProfileId(UUID profileId) {
         this.profileId = profileId;
-        return this;
-    }
-
-    public Set<ChannelDto> getChannels() {
-        return channels;
-    }
-
-    public ServerDto setChannels(Set<ChannelDto> channels) {
-        this.channels = channels;
-        return this;
-    }
-
-    public Set<MemberDto> getMembers() {
-        return members;
-    }
-
-    public ServerDto setMembers(Set<MemberDto> members) {
-        this.members = members;
-        return this;
     }
 
     public LocalDateTime getCreatedAt() {
         return createdAt;
     }
 
-    public ServerDto setCreatedAt(LocalDateTime createdAt) {
+    public void setCreatedAt(LocalDateTime createdAt) {
         this.createdAt = createdAt;
-        return this;
     }
 
     public LocalDateTime getUpdatedAt() {
         return updatedAt;
     }
 
-    public ServerDto setUpdatedAt(LocalDateTime updatedAt) {
+    public void setUpdatedAt(LocalDateTime updatedAt) {
         this.updatedAt = updatedAt;
-        return this;
+    }
+
+    public Set<ChannelDto> getChannels() {
+        return channels;
+    }
+
+    public void setChannels(Set<ChannelDto> channels) {
+        this.channels = channels;
+    }
+
+    public Set<MemberDto> getMembers() {
+        return members;
+    }
+
+    public void setMembers(Set<MemberDto> members) {
+        this.members = members;
     }
 }

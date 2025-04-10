@@ -4,6 +4,7 @@ import com.discordclone.api.dto.ErrorResponseDto;
 import org.hibernate.PropertyValueException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authorization.AuthorizationDeniedException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -44,5 +45,16 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
                 new ErrorResponseDto(HttpStatus.NOT_FOUND, e.getMessage())
         );
+    }
+
+    private static final String DEFAULT_MISSING_BODY_MESSAGE = "Required request body is missing";
+
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    public ResponseEntity<String> handleHttpMessageNotReadableException(HttpMessageNotReadableException ex) {
+        if (ex.getMessage() != null && ex.getMessage().contains(DEFAULT_MISSING_BODY_MESSAGE)) {
+            throw new RequestBodyNullException();
+        }
+
+        throw ex;
     }
 }

@@ -10,6 +10,7 @@ import com.discordclone.api.model.Profile;
 import com.discordclone.api.model.Server;
 import com.discordclone.api.repository.ChannelRepository;
 import com.discordclone.api.repository.MemberRepository;
+import com.discordclone.api.repository.ProfileRepository;
 import com.discordclone.api.repository.ServerRepository;
 import com.discordclone.api.security.JwtService;
 import com.discordclone.api.util.mapper.ServerMapper;
@@ -32,6 +33,7 @@ public class ServerService {
     private final ChannelRepository channelRepository;
     private final MemberService memberService;
     private final MemberRepository memberRepository;
+    private final ProfileRepository profileRepository;
 
     public ServerService(
             ServerRepository serverRepository,
@@ -39,7 +41,7 @@ public class ServerService {
             ProfileService profileService,
             ChannelRepository channelRepository,
             MemberService memberService,
-            MemberRepository memberRepository
+            MemberRepository memberRepository, ProfileRepository profileRepository
     ) {
         this.serverRepository = serverRepository;
         this.jwtService = jwtService;
@@ -47,6 +49,7 @@ public class ServerService {
         this.channelRepository = channelRepository;
         this.memberService = memberService;
         this.memberRepository = memberRepository;
+        this.profileRepository = profileRepository;
     }
 
     public ResponseEntity<?> createServer(CreateServerDto createServerDto,
@@ -66,7 +69,6 @@ public class ServerService {
         if (currentUser.isPresent()) {
             Channel channel = new Channel();
             Member member = new Member();
-            member.setProfile(currentUser.get());
 
             HashSet<Channel> channels = new HashSet<>();
             channels.add(channel);
@@ -77,7 +79,6 @@ public class ServerService {
                     .setImageUrl(createServerDto.getServerImage())
                     .setName(createServerDto.getServerName())
                     .setInviteCode(UUID.randomUUID())
-                    .setProfile(currentUser.get())
                     .setChannels(channels)
                     .setMembers(members);
 
@@ -89,13 +90,10 @@ public class ServerService {
             HashSet<Server> servers = new HashSet<>();
             servers.add(savedServer);
 
-            savedChannel.setServer(savedServer);
-            savedMember.setServers(servers);
-
             channelRepository.save(savedChannel);
             memberRepository.save(savedMember);
 
-            ServerDto serverDTO = ServerMapper.toServerDTO(savedServer);
+            ServerDto serverDTO = ServerMapper.toServerDTO(savedServer, currentUser.get().getId());
 
             return new ResponseEntity<>(serverDTO, HttpStatus.CREATED);
         }
@@ -119,21 +117,6 @@ public class ServerService {
         return server.get();
     }
 
-    public ServerDto updateServer(UUID id, ServerDto updatedServer) {
-        Optional<Server> existingServer = serverRepository.findById(id);
-
-        if (existingServer.isEmpty()) {
-            throw new RuntimeException();
-        } else {
-            Server server = existingServer.get();
-            server.setName(updatedServer.getName());
-            server.setImageUrl(updatedServer.getImageUrl());
-            server.setChannels(server.getChannels());
-            server.setMembers(server.getMembers());
-            return ServerMapper.toServerDTO(serverRepository.save(server));
-        }
-    }
-
     public boolean deleteServer(UUID id) {
         Optional<Server> server = serverRepository.findById(id);
 
@@ -146,12 +129,10 @@ public class ServerService {
     }
 
     public Set<ServerDto> getAllServersByProfileId(UUID profileId) {
-        Set<Server> servers = serverRepository.findAllAsSetByProfile_Id(profileId);
+        Profile profile = profileRepository.findProfileById(profileId).orElseThrow(() -> new InvalidInputException("Invalid profile id"));
 
-        if (servers.isEmpty()) {
-            return new HashSet<>();
-        }
+        Set<Server> servers = profile.getServers();
 
-        return servers.stream().map(ServerMapper::toServerDTO).collect(Collectors.toSet());
+        return servers.stream().map(server -> ServerMapper.toServerDTO(server, profileId)).collect(Collectors.toSet());
     }
 }
