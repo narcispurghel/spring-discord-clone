@@ -109,12 +109,4 @@ public class Server {
         return this;
     }
 
-    public void addChannel(Channel channel) {
-        channels.add(channel);
-    }
-
-    public void addMember(Member member) {
-        members.add(member);
-    }
-
 }

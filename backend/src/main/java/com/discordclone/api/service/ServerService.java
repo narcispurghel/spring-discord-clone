@@ -1,5 +1,6 @@
 package com.discordclone.api.service;
 
+import com.discordclone.api.dto.ChannelDto;
 import com.discordclone.api.dto.CreateServerDto;
 import com.discordclone.api.dto.ErrorResponseDto;
 import com.discordclone.api.dto.ServerDto;
@@ -135,4 +136,5 @@ public class ServerService {
 
         return servers.stream().map(server -> ServerMapper.toServerDTO(server, profileId)).collect(Collectors.toSet());
     }
+
 }

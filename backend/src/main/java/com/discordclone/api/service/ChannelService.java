@@ -12,6 +12,8 @@ import jakarta.transaction.Transactional;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
+import java.util.HashSet;
+import java.util.Set;
 import java.util.UUID;
 
 @Service
@@ -36,6 +38,11 @@ public class ChannelService {
                 .setType(createChannelDto.channelType());
 
         Channel savedChannel = channelRepository.save(channel);
+
+        Set<Channel> channels = server.getChannels();
+        channels.add(savedChannel);
+
+        server.setChannels(channels);
 
         return ServerMapper.toServerDTO(serverService.getServerById(serverId), profileId);
     }
