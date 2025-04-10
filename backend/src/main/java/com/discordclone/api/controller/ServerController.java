@@ -8,6 +8,7 @@ import com.discordclone.api.model.Profile;
 import com.discordclone.api.model.Server;
 import com.discordclone.api.repository.ProfileRepository;
 import com.discordclone.api.repository.ServerRepository;
+import com.discordclone.api.service.ProfileService;
 import com.discordclone.api.service.ServerService;
 import com.discordclone.api.util.mapper.ProfileMapper;
 import com.discordclone.api.util.mapper.ServerMapper;
@@ -31,15 +32,17 @@ public class    ServerController {
     private final ServerService serverService;
     private final ServerRepository serverRepository;
     private final ProfileRepository profileRepository;
+    private final ProfileService profileService;
 
     public ServerController(
             ServerService serverService,
             ServerRepository serverRepository,
-            ProfileRepository profileRepository
-    ) {
+            ProfileRepository profileRepository,
+            ProfileService profileService) {
         this.serverService = serverService;
         this.serverRepository = serverRepository;
         this.profileRepository = profileRepository;
+        this.profileService = profileService;
     }
 
     @GetMapping("/servers")
@@ -64,17 +67,13 @@ public class    ServerController {
     }
 
     @GetMapping("/servers/{id}/server-with-channels-members-and-profiles")
-    public ResponseEntity<?> getServerById(@PathVariable("id") UUID id) {
-        Optional<Server> server = serverRepository.findById(id);
+    public ResponseEntity<ServerDto> getServerById(@PathVariable("id") UUID id) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        Optional<Profile> profile = Optional.ofNullable(profileRepository.findByEmail(authentication.getName()).orElseThrow(() -> new InvalidInputException("Invalid profile id")));
 
-        if(server.isPresent() && profile.isPresent()) {
-            ServerDto response = ServerMapper.toServerDTO(server.get(), profile.get().getId());
-            return new ResponseEntity<>(response, HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>("Server " + id + " not found!", HttpStatus.NOT_FOUND);
-        }
+        UUID profileId = profileService.getProfileIdFromAuth(authentication);
+        ServerDto response = ServerMapper.toServerDTO(serverService.getServerById(id), profileId);
+
+        return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
 }

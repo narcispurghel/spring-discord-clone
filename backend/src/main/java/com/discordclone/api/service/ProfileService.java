@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 @Transactional
@@ -61,5 +62,9 @@ public class ProfileService {
         if (updateProfileDto.username() == null) {
             throw new InvalidInputException("Profile username is required");
         }
+    }
+
+    public UUID getProfileIdFromAuth(Authentication authentication) {
+        return profileRepository.findByEmail(authentication.getName()).map(Profile::getId).orElseThrow(() -> new UsernameNotFoundException("Cannot find the profile with username " + authentication.getName()));
     }
 }
