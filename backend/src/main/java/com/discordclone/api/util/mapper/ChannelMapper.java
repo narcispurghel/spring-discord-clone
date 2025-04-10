@@ -17,7 +17,8 @@ public final class ChannelMapper {
                 channel.getChannelName(),
                 channel.getType(),
                 channel.getServer().getId(),
-                channel.getCreatedAt(),
+                channel.getCreatedAt
+                        (),
                 channel.getUpdatedAt()
         );
     }

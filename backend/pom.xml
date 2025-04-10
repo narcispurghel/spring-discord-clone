@@ -52,7 +52,6 @@
 			<artifactId>spring-boot-starter-web</artifactId>
 		</dependency>
 
-		<!-- https://mvnrepository.com/artifact/org.postgresql/postgresql -->
 		<dependency>
 			<groupId>org.postgresql</groupId>
 			<artifactId>postgresql</artifactId>
@@ -102,17 +101,6 @@
             <version>17.0.0</version>
             <scope>compile</scope>
         </dependency>
-		<dependency>
-			<groupId>org.jetbrains.kotlin</groupId>
-			<artifactId>kotlin-stdlib-jdk8</artifactId>
-			<version>${kotlin.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.jetbrains.kotlin</groupId>
-			<artifactId>kotlin-test</artifactId>
-			<version>${kotlin.version}</version>
-			<scope>test</scope>
-		</dependency>
 
 	</dependencies>
 
