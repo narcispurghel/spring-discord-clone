@@ -19,18 +19,18 @@ import java.util.UUID;
 @Transactional
 public class ChannelServiceImpl implements ChannelService {
     private final ChannelRepository channelRepository;
-    private final ServerServiceImpl serverServiceImpl;
+    private final ServerServiceImpl serverService;
 
     public ChannelServiceImpl(ChannelRepository channelRepository,
-                              ServerServiceImpl serverServiceImpl) {
+                              ServerServiceImpl serverService) {
         this.channelRepository = channelRepository;
-        this.serverServiceImpl = serverServiceImpl;
+        this.serverService = serverService;
     }
 
     public ServerDto createChannel(CreateChannelDto createChannelDto, UUID serverId, UUID profileId) {
         validateCreateChannelDto(createChannelDto);
 
-        Server server = serverServiceImpl.getServerById(serverId);
+        Server server = serverService.getServerById(serverId);
 
         Channel channel = new Channel()
                 .setChannelName(createChannelDto.channelName())
@@ -43,7 +43,7 @@ public class ChannelServiceImpl implements ChannelService {
 
         server.setChannels(channels);
 
-        return ServerMapper.toServerDTO(serverServiceImpl.getServerById(serverId), profileId);
+        return ServerMapper.toServerDTO(serverService.getServerById(serverId), profileId);
     }
 
     private void validateCreateChannelDto(CreateChannelDto channelDto) {

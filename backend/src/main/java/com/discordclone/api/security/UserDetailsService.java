@@ -3,15 +3,14 @@ package com.discordclone.api.security;
 import com.discordclone.api.model.Profile;
 import com.discordclone.api.repository.ProfileRepository;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 @Service
-public class UserDetailsServiceImplementation implements UserDetailsService {
+public class UserDetailsService implements org.springframework.security.core.userdetails.UserDetailsService {
     private final ProfileRepository repository;
 
-    public UserDetailsServiceImplementation(ProfileRepository repository) {
+    public UserDetailsService(ProfileRepository repository) {
         this.repository = repository;
     }
 

@@ -1,7 +1,7 @@
 package com.discordclone.api.config;
 
 import com.discordclone.api.security.JwtAuthenticationFilter;
-import com.discordclone.api.security.UserDetailsServiceImplementation;
+import com.discordclone.api.security.UserDetailsService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -27,11 +27,11 @@ import java.util.List;
 @EnableWebSecurity
 public class SecurityConfiguration {
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
-    private final UserDetailsServiceImplementation userDetailsService;
+    private final UserDetailsService userDetailsService;
 
     public SecurityConfiguration
             (JwtAuthenticationFilter jwtAuthenticationFilter,
-             UserDetailsServiceImplementation userDetailsService)
+             UserDetailsService userDetailsService)
     {
         this.jwtAuthenticationFilter = jwtAuthenticationFilter;
         this.userDetailsService = userDetailsService;
