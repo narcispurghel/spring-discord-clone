@@ -10,7 +10,6 @@ import com.discordclone.api.repository.ChannelRepository;
 import com.discordclone.api.repository.MemberRepository;
 import com.discordclone.api.repository.ProfileRepository;
 import com.discordclone.api.repository.ServerRepository;
-import com.discordclone.api.security.JwtService;
 import com.discordclone.api.service.ServerService;
 import jakarta.transaction.Transactional;
 import org.springframework.http.HttpStatus;
@@ -18,7 +17,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.*;
 
-@Transactional
 @Service
 public class ServerServiceImpl implements ServerService {
     private final ServerRepository serverRepository;
@@ -29,10 +27,8 @@ public class ServerServiceImpl implements ServerService {
 
     public ServerServiceImpl(
             ServerRepository serverRepository,
-            JwtService jwtService,
             ProfileServiceImpl profileServiceImpl,
             ChannelRepository channelRepository,
-            MemberServiceImpl memberServiceImpl,
             MemberRepository memberRepository, ProfileRepository profileRepository
     ) {
         this.serverRepository = serverRepository;
@@ -43,6 +39,7 @@ public class ServerServiceImpl implements ServerService {
     }
 
     @Override
+    @Transactional
     public Server createServer(CreateServerDto data, UUID profileId) {
         Profile currentUser = profileServiceImpl.getProfileById(profileId);
         boolean serverExists = serverRepository.existsByName(data.getServerName());
@@ -82,6 +79,8 @@ public class ServerServiceImpl implements ServerService {
         return savedServer;
     }
 
+    @Override
+    @Transactional
     public Server getServerById(UUID id) {
         if (id == null) {
             throw new InvalidInputException("Invalid server.id", "server id must be a non-null value", HttpStatus.BAD_REQUEST, "server.id");
@@ -89,9 +88,15 @@ public class ServerServiceImpl implements ServerService {
 
         Optional<Server> server = serverRepository.findById(id);
 
-        return server.orElseThrow(() -> new InvalidInputException("Invalid server.id", "Cannot find a server associated with id " + id, HttpStatus.BAD_REQUEST, "server.id"));
+        return server.orElseThrow(() -> new InvalidInputException(
+                "Invalid server.id",
+                "Cannot find a server associated with id " + id,
+                HttpStatus.BAD_REQUEST, "server.id")
+        );
     }
 
+    @Override
+    @Transactional
     public boolean deleteServerById(UUID id) {
         Optional<Server> server = serverRepository.findById(id);
 
@@ -104,6 +109,7 @@ public class ServerServiceImpl implements ServerService {
     }
 
     @Override
+    @Transactional
     public Set<Server> getAllServersByProfileId(UUID profileId) {
         Profile profile = profileRepository.findProfileById(profileId)
                 .orElseThrow(() -> new InvalidInputException(
