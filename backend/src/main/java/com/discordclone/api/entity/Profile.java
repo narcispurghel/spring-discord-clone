@@ -1,4 +1,4 @@
-package com.discordclone.api.model;
+package com.discordclone.api.entity;
 
 import jakarta.persistence.*;
 import org.hibernate.annotations.CreationTimestamp;

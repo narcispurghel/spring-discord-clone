@@ -1,15 +1,16 @@
 package com.discordclone.api.service.impl;
 
-import com.discordclone.api.dto.CreateChannelDto;
-import com.discordclone.api.dto.ServerDto;
-import com.discordclone.api.exception.InvalidInputException;
+import com.discordclone.api.model.CreateChannelDto;
+import com.discordclone.api.model.ServerDto;
+import com.discordclone.api.exception.impl.InvalidInputException;
 import com.discordclone.api.exception.RequestBodyNullException;
-import com.discordclone.api.model.Channel;
-import com.discordclone.api.model.Server;
+import com.discordclone.api.entity.Channel;
+import com.discordclone.api.entity.Server;
 import com.discordclone.api.repository.ChannelRepository;
 import com.discordclone.api.service.ChannelService;
 import com.discordclone.api.util.mapper.ServerMapper;
 import jakarta.transaction.Transactional;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.Set;
@@ -46,17 +47,15 @@ public class ChannelServiceImpl implements ChannelService {
         return ServerMapper.toServerDTO(serverService.getServerById(serverId), profileId);
     }
 
-    private void validateCreateChannelDto(CreateChannelDto channelDto) {
-        if (channelDto == null ) {
-            throw new RequestBodyNullException();
+    private void validateCreateChannelDto(CreateChannelDto data) {
+        if (data == null ) {
+            throw new InvalidInputException("Invalid channel", "channel must be a non-null value", HttpStatus.UNPROCESSABLE_ENTITY, "channel");
         }
-
-        if (channelDto.channelName() == null) {
-            throw new InvalidInputException("Channel name is required");
+        if (data.channelName() == null) {
+            throw new InvalidInputException("Invalid channel.name", "name must be a non-null value", HttpStatus.BAD_REQUEST, "channel.name");
         }
-
-        if (channelDto.channelType() == null) {
-            throw new InvalidInputException("Channel type is required");
+        if (data.channelType() == null) {
+            throw new InvalidInputException("Invalid channel.type", "name must be a non-null value", HttpStatus.BAD_REQUEST, "channel.type");
         }
 
     }

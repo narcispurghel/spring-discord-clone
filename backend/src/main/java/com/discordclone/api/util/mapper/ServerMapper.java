@@ -1,7 +1,7 @@
 package com.discordclone.api.util.mapper;
 
-import com.discordclone.api.dto.ServerDto;
-import com.discordclone.api.model.Server;
+import com.discordclone.api.model.ServerDto;
+import com.discordclone.api.entity.Server;
 
 import java.util.UUID;
 import java.util.stream.Collectors;

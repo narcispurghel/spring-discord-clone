@@ -1,6 +1,6 @@
 package com.discordclone.api.service.impl;
 
-import com.discordclone.api.model.Member;
+import com.discordclone.api.entity.Member;
 import com.discordclone.api.repository.MemberRepository;
 import com.discordclone.api.service.MemberService;
 import org.springframework.stereotype.Service;

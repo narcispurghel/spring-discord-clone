@@ -1,4 +1,4 @@
-package com.discordclone.api.dto;
+package com.discordclone.api.model;
 
 import java.util.Date;
 import java.util.HashSet;

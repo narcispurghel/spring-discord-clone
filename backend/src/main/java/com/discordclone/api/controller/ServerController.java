@@ -1,7 +1,8 @@
 package com.discordclone.api.controller;
 
-import com.discordclone.api.dto.CreateServerDto;
-import com.discordclone.api.dto.ServerDto;
+import com.discordclone.api.entity.Server;
+import com.discordclone.api.model.CreateServerDto;
+import com.discordclone.api.model.ServerDto;
 import com.discordclone.api.service.ProfileService;
 import com.discordclone.api.service.ServerService;
 import com.discordclone.api.util.mapper.ServerMapper;
@@ -9,16 +10,16 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+import java.util.Set;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @RestController
-@Transactional
 @RequestMapping("/api")
-//TODO create specific responses types for every request
-public class    ServerController {
+public class ServerController {
     private final ServerService serverService;
     private final ProfileService profileService;
 
@@ -29,17 +30,24 @@ public class    ServerController {
     }
 
     @GetMapping("/servers")
-    public ResponseEntity<?> getServers() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-
+    public ResponseEntity<Set<ServerDto>> getServers(Authentication authentication) {
         UUID profileId = profileService.getProfileIdFromAuth(authentication);
-        return ResponseEntity.status(HttpStatus.OK).body(serverService.getAllServersByProfileId(profileId));
+        Set<Server> profileServers = serverService.getAllServersByProfileId(profileId);
+
+        Set<ServerDto> response = profileServers.stream()
+                .map(server -> ServerMapper.toServerDTO(server, profileId))
+                .collect(Collectors.toSet());
+
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @PostMapping("/servers")
-    //TODO replace anonymous returned type with a specific one
-    public ResponseEntity<?> createServer(@RequestBody CreateServerDto createServerDto, Authentication authentication) {
-        return serverService.createServer(createServerDto, authentication);
+    public ResponseEntity<ServerDto> createServer(@RequestBody CreateServerDto createServerDto, Authentication authentication) {
+        UUID profileId = profileService.getProfileIdFromAuth(authentication);
+        Server createdServer = serverService.createServer(createServerDto, profileId);
+        ServerDto serverDto = ServerMapper.toServerDTO(createdServer, profileId);
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(serverDto);
     }
 
     @GetMapping("/servers/{id}/server-with-channels-members-and-profiles")
