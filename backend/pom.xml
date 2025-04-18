@@ -27,8 +27,7 @@
 		<url/>
 	</scm>
 	<properties>
-		<java.version>23</java.version>
-		<kotlin.version>2.1.10</kotlin.version>
+		<java.version>24</java.version>
 	</properties>
 
 	<repositories>
@@ -115,42 +114,6 @@
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
-			</plugin>
-			<plugin>
-				<groupId>org.jetbrains.kotlin</groupId>
-				<artifactId>kotlin-maven-plugin</artifactId>
-				<version>${kotlin.version}</version>
-				<executions>
-					<execution>
-						<id>compile</id>
-						<phase>compile</phase>
-						<goals>
-							<goal>compile</goal>
-						</goals>
-						<configuration>
-							<sourceDirs>
-								<source>src/main/java</source>
-								<source>target/generated-sources/annotations</source>
-							</sourceDirs>
-						</configuration>
-					</execution>
-					<execution>
-						<id>test-compile</id>
-						<phase>test-compile</phase>
-						<goals>
-							<goal>test-compile</goal>
-						</goals>
-						<configuration>
-							<sourceDirs>
-								<source>src/test/java</source>
-								<source>target/generated-test-sources/test-annotations</source>
-							</sourceDirs>
-						</configuration>
-					</execution>
-				</executions>
-				<configuration>
-					<jvmTarget>1.8</jvmTarget>
-				</configuration>
 			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>

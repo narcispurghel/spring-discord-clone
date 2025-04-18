@@ -1,7 +1,7 @@
 package com.discordclone.api.util;
 
 import com.discordclone.api.exception.impl.InvalidInputException;
-import com.discordclone.api.model.auth.LoginUserDto;
+import com.discordclone.api.model.auth.LoginUserDTO;
 import com.discordclone.api.model.auth.RegisterUserDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -49,14 +49,14 @@ public class ModelValidator {
         }
     }
 
-    public static void validateLoginUserDTO(LoginUserDto data) {
+    public static void validateLoginUserDTO(LoginUserDTO data) {
         if (data == null) {
             throw new InvalidInputException("Invalid data", "data cannot be null", HttpStatus.BAD_REQUEST, "data");
         }
-        if (data.getUsername() == null) {
+        if (data.username() == null) {
             throw new InvalidInputException("Invalid username", "username cannot be null", HttpStatus.BAD_REQUEST, "username");
         }
-        if (data.getPassword() == null) {
+        if (data.password() == null) {
             throw new InvalidInputException("Invalid password", "password cannot be null", HttpStatus.BAD_REQUEST, "password");
         }
     }

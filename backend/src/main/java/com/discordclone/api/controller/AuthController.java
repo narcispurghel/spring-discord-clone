@@ -1,8 +1,7 @@
 package com.discordclone.api.controller;
 
 import com.discordclone.api.entity.Profile;
-import com.discordclone.api.model.CreateServerResponseDto;
-import com.discordclone.api.model.auth.LoginUserDto;
+import com.discordclone.api.model.auth.LoginUserDTO;
 import com.discordclone.api.model.ProfileDto;
 import com.discordclone.api.model.auth.RegisterUserDTO;
 import com.discordclone.api.model.response.ErrorResponseDto;
@@ -118,17 +117,18 @@ public class AuthController {
             )
     })
     @PostMapping("/login")
-    public ResponseEntity<ProfileDto> authenticate(@RequestBody(required = false) LoginUserDto data,
+    public ResponseEntity<ProfileDto> authenticate(@RequestBody(required = false) LoginUserDTO data,
                                                    HttpServletResponse response) {
+        ModelValidator.validateLoginUserDTO(data);
         boolean isAuthenticated = authenticationService.authenticate(data);
 
         if (!isAuthenticated) {
             throw new BadCredentialsException("Invalid username or password");
         }
 
-        final String jwtToken = jwtService.generateToken(userDetailsService.loadUserByUsername(data.getUsername()));
-        final Profile profile = profileRepository.findByEmail(data.getUsername())
-                .orElseThrow(() -> new UsernameNotFoundException("Cannot find a profile associated with this email " + data.getUsername()));
+        final String jwtToken = jwtService.generateToken(userDetailsService.loadUserByUsername(data.username()));
+        final Profile profile = profileRepository.findByEmail(data.username())
+                .orElseThrow(() -> new UsernameNotFoundException("Cannot find a profile associated with this email " + data.username()));
 
         Cookie cookie = new Cookie("Jwt", jwtToken);
         cookie.setPath("/");
@@ -164,7 +164,6 @@ public class AuthController {
     })
     @GetMapping("/logout")
     public ResponseEntity<String> logout(HttpServletResponse response) {
-
         Cookie cookie = new Cookie("Jwt", null);
         cookie.setMaxAge(0);
         cookie.setPath("/");

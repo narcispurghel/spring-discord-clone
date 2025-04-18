@@ -1,7 +1,7 @@
 package com.discordclone.api.service.impl;
 
 import com.discordclone.api.exception.impl.EmailAlreadyUsedException;
-import com.discordclone.api.model.auth.LoginUserDto;
+import com.discordclone.api.model.auth.LoginUserDTO;
 import com.discordclone.api.model.auth.RegisterUserDTO;
 import com.discordclone.api.entity.Profile;
 import com.discordclone.api.repository.ProfileRepository;
@@ -47,11 +47,11 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     }
 
     @Override
-    public boolean authenticate(LoginUserDto input) {
+    public boolean authenticate(LoginUserDTO input) {
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
-                        input.getUsername(),
-                        input.getPassword()
+                        input.username(),
+                        input.password()
                 )
         );
 
