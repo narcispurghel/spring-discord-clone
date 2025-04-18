@@ -1,8 +1,7 @@
 package com.discordclone.api.controller;
 
-import com.discordclone.api.dto.CreateChannelDto;
-import com.discordclone.api.dto.ServerDto;
-import com.discordclone.api.repository.ProfileRepository;
+import com.discordclone.api.model.CreateChannelDto;
+import com.discordclone.api.model.ServerDto;
 import com.discordclone.api.service.ChannelService;
 import com.discordclone.api.service.ProfileService;
 import com.discordclone.api.service.impl.ChannelServiceImpl;

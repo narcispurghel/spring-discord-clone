@@ -1,22 +1,18 @@
 package com.discordclone.api.service.impl;
 
-import com.discordclone.api.dto.auth.LoginUserDto;
-import com.discordclone.api.dto.ProfileDto;
-import com.discordclone.api.dto.auth.RegisterUserDto;
-import com.discordclone.api.exception.InvalidInputException;
-import com.discordclone.api.exception.RequestBodyNullException;
-import com.discordclone.api.model.Profile;
+import com.discordclone.api.exception.impl.EmailAlreadyUsedException;
+import com.discordclone.api.model.auth.LoginUserDto;
+import com.discordclone.api.model.auth.RegisterUserDTO;
+import com.discordclone.api.entity.Profile;
 import com.discordclone.api.repository.ProfileRepository;
 import com.discordclone.api.service.AuthenticationService;
-import com.discordclone.api.util.mapper.ProfileMapper;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
-import java.util.Optional;
 
 @Service
 public class AuthenticationServiceImpl implements AuthenticationService {
@@ -34,62 +30,31 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         this.passwordEncoder = passwordEncoder;
     }
 
-    public ProfileDto register(RegisterUserDto input) {
-        validateRegisterUserDto(input);
-
+    @Override
+    public Profile register(RegisterUserDTO data) {
         Profile profile = new Profile()
-                .setName(input.getName())
-                .setEmail(input.getEmail())
-                .setPassword(passwordEncoder.encode(input.getPassword()));
+                .setName(data.getName())
+                .setEmail(data.getEmail())
+                .setPassword(passwordEncoder.encode(data.getPassword()));
 
-        return ProfileMapper.toProfileDTO(profileRepository.save(profile));
-    }
-    private void validateRegisterUserDto(RegisterUserDto registerUserDto) {
-        if (registerUserDto.getEmail() == null) {
-            throw new InvalidInputException("Username cannot be null");
+        boolean emailIsUsed = profileRepository.existsByEmail(data.getEmail());
+
+        if (emailIsUsed) {
+            throw new EmailAlreadyUsedException("Invalid email", "This email is associated with another account", HttpStatus.CONFLICT, "email");
         }
 
-        if (registerUserDto.getPassword() == null) {
-            throw new InvalidInputException("Password cannot be null");
-        }
-
-        if (registerUserDto.getName() == null) {
-            throw new InvalidInputException("Name cannot be null");
-        }
+        return profileRepository.save(profile);
     }
 
-
-    public ProfileDto authenticate(LoginUserDto input) {
-
-        validateLoginUserDto(input);
-
-        authenticationManager.authenticate(
+    @Override
+    public boolean authenticate(LoginUserDto input) {
+        Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
                         input.getUsername(),
                         input.getPassword()
                 )
         );
 
-        Optional<Profile> profile = profileRepository.findByEmail(input.getUsername());
-
-        if (profile.isEmpty()) {
-            throw new UsernameNotFoundException("User " + input.getUsername() + " not found!");
-        }
-
-        return ProfileMapper.toProfileDTO(profile.get());
-    }
-
-    private void validateLoginUserDto(LoginUserDto loginUserDto) {
-        if (loginUserDto == null) {
-            throw new RequestBodyNullException();
-        }
-
-        if (loginUserDto.getUsername() == null) {
-            throw new InvalidInputException("Username cannot be null");
-        }
-
-        if (loginUserDto.getPassword() == null) {
-            throw new InvalidInputException("Password cannot be null");
-        }
+        return authentication.isAuthenticated();
     }
 }

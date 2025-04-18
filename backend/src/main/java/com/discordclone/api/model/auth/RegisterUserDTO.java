@@ -1,6 +1,6 @@
-package com.discordclone.api.dto.auth;
+package com.discordclone.api.model.auth;
 
-public class RegisterUserDto {
+public class RegisterUserDTO {
     private String email;
     private String name;
     private String password;

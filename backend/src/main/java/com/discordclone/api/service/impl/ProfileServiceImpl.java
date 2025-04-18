@@ -1,14 +1,15 @@
 package com.discordclone.api.service.impl;
 
-import com.discordclone.api.dto.ProfileDto;
-import com.discordclone.api.dto.UpdateProfileDto;
-import com.discordclone.api.exception.InvalidInputException;
+import com.discordclone.api.model.ProfileDto;
+import com.discordclone.api.model.UpdateProfileDto;
+import com.discordclone.api.exception.impl.InvalidInputException;
 import com.discordclone.api.exception.RequestBodyNullException;
-import com.discordclone.api.model.Profile;
+import com.discordclone.api.entity.Profile;
 import com.discordclone.api.repository.ProfileRepository;
 import com.discordclone.api.service.ProfileService;
 import com.discordclone.api.util.mapper.ProfileMapper;
 import jakarta.transaction.Transactional;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -58,14 +59,19 @@ public class ProfileServiceImpl implements ProfileService {
 
     private void validateUpdateProfileRequest(UpdateProfileDto updateProfileDto) {
         if (updateProfileDto == null) {
-            throw new RequestBodyNullException();
+            throw new InvalidInputException("Invalid request body", "request body must be a non-null value", HttpStatus.UNPROCESSABLE_ENTITY, "request.body");
         }
         if (updateProfileDto.username() == null) {
-            throw new InvalidInputException("Profile username is required");
+            throw new InvalidInputException("Invalid username", "username must be a non-null value", HttpStatus.BAD_REQUEST, "username");
         }
     }
 
     public UUID getProfileIdFromAuth(Authentication authentication) {
         return profileRepository.findByEmail(authentication.getName()).map(Profile::getId).orElseThrow(() -> new UsernameNotFoundException("Cannot find the profile with username " + authentication.getName()));
+    }
+
+    @Override
+    public Profile getProfileById(UUID profileId) {
+        return profileRepository.getProfileById(profileId).orElseThrow(() -> new UsernameNotFoundException("Cannot find the profile with id " + profileId));
     }
 }

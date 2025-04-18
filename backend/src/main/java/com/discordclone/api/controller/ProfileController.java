@@ -1,8 +1,8 @@
 package com.discordclone.api.controller;
 
-import com.discordclone.api.dto.ProfileDto;
-import com.discordclone.api.dto.UpdateProfileDto;
-import com.discordclone.api.model.Profile;
+import com.discordclone.api.model.ProfileDto;
+import com.discordclone.api.model.UpdateProfileDto;
+import com.discordclone.api.entity.Profile;
 import com.discordclone.api.service.ProfileService;
 import com.discordclone.api.service.impl.ProfileServiceImpl;
 import org.springframework.http.HttpStatus;

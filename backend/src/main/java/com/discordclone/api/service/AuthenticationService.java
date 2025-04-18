@@ -1,10 +1,10 @@
 package com.discordclone.api.service;
 
-import com.discordclone.api.dto.ProfileDto;
-import com.discordclone.api.dto.auth.LoginUserDto;
-import com.discordclone.api.dto.auth.RegisterUserDto;
+import com.discordclone.api.entity.Profile;
+import com.discordclone.api.model.auth.LoginUserDto;
+import com.discordclone.api.model.auth.RegisterUserDTO;
 
 public interface AuthenticationService {
-    ProfileDto register(RegisterUserDto input);
-    ProfileDto authenticate(LoginUserDto input);
+    Profile register(RegisterUserDTO input);
+    boolean authenticate(LoginUserDto input);
 }

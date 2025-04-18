@@ -1,7 +1,7 @@
 package com.discordclone.api.util.mapper;
 
-import com.discordclone.api.dto.ProfileDto;
-import com.discordclone.api.model.Profile;
+import com.discordclone.api.model.ProfileDto;
+import com.discordclone.api.entity.Profile;
 
 public final class ProfileMapper {
     public static ProfileDto toProfileDTO(Profile profile) {

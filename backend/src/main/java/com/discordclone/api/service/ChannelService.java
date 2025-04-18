@@ -1,7 +1,7 @@
 package com.discordclone.api.service;
 
-import com.discordclone.api.dto.CreateChannelDto;
-import com.discordclone.api.dto.ServerDto;
+import com.discordclone.api.model.CreateChannelDto;
+import com.discordclone.api.model.ServerDto;
 
 import java.util.UUID;
 
