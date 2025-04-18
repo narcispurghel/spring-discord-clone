@@ -5,7 +5,7 @@ import com.discordclone.api.model.auth.LoginUserDTO;
 import com.discordclone.api.model.auth.RegisterUserDTO;
 import com.discordclone.api.entity.Profile;
 import com.discordclone.api.repository.ProfileRepository;
-import com.discordclone.api.service.AuthenticationService;
+import com.discordclone.api.service.AuthService;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -15,12 +15,12 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
-public class AuthenticationServiceImpl implements AuthenticationService {
+public class AuthServiceImpl implements AuthService {
     private final ProfileRepository profileRepository;
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;
 
-    public AuthenticationServiceImpl(
+    public AuthServiceImpl(
             ProfileRepository profileRepository,
             AuthenticationManager authenticationManager,
             PasswordEncoder passwordEncoder

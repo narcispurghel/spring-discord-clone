@@ -15,11 +15,11 @@ public class Profile {
     @Column(nullable = false)
     private UUID id;
 
-    @Column(nullable = false)
-    private String name;
-
     @Column(unique = true, length = 100, nullable = false)
     private String email;
+
+    @Column(nullable = false)
+    private String name;
 
     @Column(name = "profile_image")
     private String imageUrl;
@@ -40,6 +40,15 @@ public class Profile {
 
     @OneToMany
     private Collection<Member> member;
+
+    public Profile() {
+    }
+
+    public Profile(String email, String name, String password) {
+        this.name = name;
+        this.email = email;
+        this.password = password;
+    }
 
     public String getImageUrl() {
         return imageUrl;
@@ -119,5 +128,16 @@ public class Profile {
     public Profile setServers(Set<Server> server) {
         this.servers = server;
         return this;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (!(o instanceof Profile profile)) return false;
+        return Objects.equals(email, profile.email) && Objects.equals(name, profile.name) && Objects.equals(password, profile.password);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(email, name, password);
     }
 }

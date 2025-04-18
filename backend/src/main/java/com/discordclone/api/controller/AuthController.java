@@ -8,7 +8,7 @@ import com.discordclone.api.model.response.ErrorResponseDto;
 import com.discordclone.api.repository.ProfileRepository;
 import com.discordclone.api.security.JwtService;
 import com.discordclone.api.security.UserDetailsService;
-import com.discordclone.api.service.AuthenticationService;
+import com.discordclone.api.service.AuthService;
 import com.discordclone.api.util.ModelValidator;
 import com.discordclone.api.util.mapper.ProfileMapper;
 import io.swagger.v3.oas.annotations.Operation;
@@ -29,15 +29,15 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/auth")
 public class AuthController {
     private final JwtService jwtService;
-    private final AuthenticationService authenticationService;
+    private final AuthService authService;
     private final UserDetailsService userDetailsService;
     private final ProfileRepository profileRepository;
 
     public AuthController(JwtService jwtService,
-                          AuthenticationService authenticationService,
+                          AuthService authService,
                           UserDetailsService userDetailsService, ProfileRepository profileRepository) {
         this.jwtService = jwtService;
-        this.authenticationService = authenticationService;
+        this.authService = authService;
         this.userDetailsService = userDetailsService;
         this.profileRepository = profileRepository;
     }
@@ -80,7 +80,7 @@ public class AuthController {
 
         ModelValidator.validateRegisterUserDTO(requestData);
 
-        Profile registeredProfile = authenticationService.register(requestData);
+        Profile registeredProfile = authService.register(requestData);
         ProfileDto profileDto = ProfileMapper.toProfileDTO(registeredProfile);
         final String jwtToken = jwtService.generateToken(userDetailsService.loadUserByUsername(profileDto.getEmail()));
 
@@ -120,7 +120,7 @@ public class AuthController {
     public ResponseEntity<ProfileDto> authenticate(@RequestBody(required = false) LoginUserDTO data,
                                                    HttpServletResponse response) {
         ModelValidator.validateLoginUserDTO(data);
-        boolean isAuthenticated = authenticationService.authenticate(data);
+        boolean isAuthenticated = authService.authenticate(data);
 
         if (!isAuthenticated) {
             throw new BadCredentialsException("Invalid username or password");
