@@ -1,15 +1,22 @@
 package com.discordclone.api.controller;
 
 import com.discordclone.api.entity.Profile;
+import com.discordclone.api.model.CreateServerResponseDto;
 import com.discordclone.api.model.auth.LoginUserDto;
 import com.discordclone.api.model.ProfileDto;
 import com.discordclone.api.model.auth.RegisterUserDTO;
+import com.discordclone.api.model.response.ErrorResponseDto;
 import com.discordclone.api.repository.ProfileRepository;
 import com.discordclone.api.security.JwtService;
 import com.discordclone.api.security.UserDetailsService;
 import com.discordclone.api.service.AuthenticationService;
 import com.discordclone.api.util.ModelValidator;
 import com.discordclone.api.util.mapper.ProfileMapper;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.http.HttpStatus;
@@ -18,8 +25,9 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
 
-@RequestMapping("/api/auth")
+
 @RestController
+@RequestMapping("/api/auth")
 public class AuthController {
     private final JwtService jwtService;
     private final AuthenticationService authenticationService;
@@ -35,10 +43,44 @@ public class AuthController {
         this.profileRepository = profileRepository;
     }
 
+    @Operation(
+            summary = "Register a user",
+            description = "Register a user based on request data"
+    )
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "201",
+                    description = "User account created",
+                    content = @Content(
+                            schema = @Schema(implementation = ProfileDto.class),
+                            mediaType = "application/json"
+                    )
+            ),
+            @ApiResponse(
+                    responseCode = "400",
+                    description = "Invalid request data",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = ErrorResponseDto.class)
+                    )
+            ),
+            @ApiResponse(
+                    responseCode = "409",
+                    description = "Email is not available",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = ErrorResponseDto.class)
+                    )
+            )
+    })
     @PostMapping("/register")
-    public ResponseEntity<ProfileDto> register(@RequestBody RegisterUserDTO requestData,
-                                               HttpServletResponse response) {
+    public ResponseEntity<ProfileDto> register(
+            @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "Data required to register an user account")
+            @RequestBody RegisterUserDTO requestData,
+            HttpServletResponse response) {
+
         ModelValidator.validateRegisterUserDTO(requestData);
+
         Profile registeredProfile = authenticationService.register(requestData);
         ProfileDto profileDto = ProfileMapper.toProfileDTO(registeredProfile);
         final String jwtToken = jwtService.generateToken(userDetailsService.loadUserByUsername(profileDto.getEmail()));
@@ -53,9 +95,31 @@ public class AuthController {
         return new ResponseEntity<>(profileDto, HttpStatus.CREATED);
     }
 
+    @Operation(
+            summary = "Login a user",
+            description = "Login a user based on request data"
+    )
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "User authenticated",
+                    content = @Content(
+                            schema = @Schema(implementation = ProfileDto.class),
+                            mediaType = "application/json"
+                    )
+            ),
+            @ApiResponse(
+                    responseCode = "400",
+                    description = "Invalid request data",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = ErrorResponseDto.class)
+                    )
+            )
+    })
     @PostMapping("/login")
     public ResponseEntity<ProfileDto> authenticate(@RequestBody(required = false) LoginUserDto data,
-                                                       HttpServletResponse response) {
+                                                   HttpServletResponse response) {
         boolean isAuthenticated = authenticationService.authenticate(data);
 
         if (!isAuthenticated) {
@@ -76,6 +140,28 @@ public class AuthController {
         return ResponseEntity.ok(ProfileMapper.toProfileDTO(profile));
     }
 
+    @Operation(
+            summary = "Logout a user",
+            description = "Remove authentication status from a user"
+    )
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "401",
+                    description = "User is not logged in anymore",
+                    content = @Content(
+                            schema = @Schema(implementation = String.class),
+                            mediaType = "application/json"
+                    )
+            ),
+            @ApiResponse(
+                    responseCode = "400",
+                    description = "Invalid request data",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = ErrorResponseDto.class)
+                    )
+            )
+    })
     @GetMapping("/logout")
     public ResponseEntity<String> logout(HttpServletResponse response) {
 

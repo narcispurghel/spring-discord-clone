@@ -1,15 +1,15 @@
 package com.discordclone.api.model.response;
 
-import org.springframework.http.HttpStatusCode;
-
 import java.time.LocalDateTime;
 
 public record ErrorResponseDto (
         String message,
-        HttpStatusCode statusCode,
+        String statusCode,
         String description,
         String root,
-        LocalDateTime timestamp)
-{
+        LocalDateTime timestamp) {
 
+    public ErrorResponseDto(String message, String statusCode, String description, String root) {
+        this(message, statusCode, description, root, LocalDateTime.now());
+    }
 }

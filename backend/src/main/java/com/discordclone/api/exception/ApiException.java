@@ -1,15 +1,14 @@
 package com.discordclone.api.exception;
 
 import org.springframework.http.HttpStatusCode;
-import org.springframework.web.server.ResponseStatusException;
 
-public abstract class ApiException extends ResponseStatusException {
+public abstract class ApiException extends RuntimeException {
     private final String description;
     private final String path;
     private final HttpStatusCode httpStatusCode;
 
     protected ApiException(String message, String description, HttpStatusCode httpStatusCode, String path) {
-        super(httpStatusCode, message);
+        super(message);
         if (path == null) {
             path = "";
         }

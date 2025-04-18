@@ -3,7 +3,6 @@ package com.discordclone.api.service.impl;
 import com.discordclone.api.model.CreateChannelDto;
 import com.discordclone.api.model.ServerDto;
 import com.discordclone.api.exception.impl.InvalidInputException;
-import com.discordclone.api.exception.RequestBodyNullException;
 import com.discordclone.api.entity.Channel;
 import com.discordclone.api.entity.Server;
 import com.discordclone.api.repository.ChannelRepository;

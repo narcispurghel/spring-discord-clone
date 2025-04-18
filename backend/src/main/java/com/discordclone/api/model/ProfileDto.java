@@ -1,11 +1,14 @@
 package com.discordclone.api.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
 
 public class ProfileDto {
+    @JsonIgnore
     private UUID id;
     private String name;
     private String email;

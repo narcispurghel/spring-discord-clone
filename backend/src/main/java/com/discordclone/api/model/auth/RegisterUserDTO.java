@@ -1,8 +1,17 @@
 package com.discordclone.api.model.auth;
 
+import com.discordclone.api.util.ModelValidator;
+import io.swagger.v3.oas.annotations.media.Schema;
+import org.springframework.ui.Model;
+
 public class RegisterUserDTO {
+    @Schema(description = "User email address", example = "user@example.com", requiredMode = Schema.RequiredMode.REQUIRED, pattern = ModelValidator.EMAIL_REGEX)
     private String email;
+
+    @Schema(description = "User full name", example = "firstName lastName", requiredMode = Schema.RequiredMode.REQUIRED)
     private String name;
+
+    @Schema(description = "User password", example = "$tr0ngPass0RD", requiredMode = Schema.RequiredMode.REQUIRED, pattern = ModelValidator.PASSWORD_REGEX)
     private String password;
 
     public String getEmail() {

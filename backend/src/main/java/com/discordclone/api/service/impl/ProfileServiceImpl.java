@@ -3,7 +3,6 @@ package com.discordclone.api.service.impl;
 import com.discordclone.api.model.ProfileDto;
 import com.discordclone.api.model.UpdateProfileDto;
 import com.discordclone.api.exception.impl.InvalidInputException;
-import com.discordclone.api.exception.RequestBodyNullException;
 import com.discordclone.api.entity.Profile;
 import com.discordclone.api.repository.ProfileRepository;
 import com.discordclone.api.service.ProfileService;
