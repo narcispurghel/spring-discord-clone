@@ -42,7 +42,9 @@ export class AppShellStoreEffects {
             'success'
           )
         ),
-        tap(({ server }) => this.router.navigate(['servers', server.id]))
+        tap(({server}) => {
+          this.router.navigate(['servers', server.id]);
+        })        
       ),
     { dispatch: false }
   );

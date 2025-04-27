@@ -7,7 +7,8 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 @Service
-public class UserDetailsService implements org.springframework.security.core.userdetails.UserDetailsService {
+public class UserDetailsService
+        implements org.springframework.security.core.userdetails.UserDetailsService {
     private final ProfileRepository repository;
 
     public UserDetailsService(ProfileRepository repository) {
@@ -17,8 +18,13 @@ public class UserDetailsService implements org.springframework.security.core.use
     @Override
     public UserDetails loadUserByUsername(String email) {
 
-        Profile profile = repository.findByEmail(email).orElseThrow(() ->
-                new UsernameNotFoundException(String.format("User does not exist, email: %s", email)));
+        Profile profile =
+                repository
+                        .findByEmail(email)
+                        .orElseThrow(
+                                () ->
+                                        new UsernameNotFoundException(
+                                                String.format("User does not exist, email: %s", email)));
 
         return org.springframework.security.core.userdetails.User.builder()
                 .username(profile.getEmail())

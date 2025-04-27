@@ -4,6 +4,7 @@ package com.discordclone.api.service.impl;
 import com.discordclone.api.entity.Profile;
 import com.discordclone.api.model.auth.RegisterUserDTO;
 import com.discordclone.api.repository.ProfileRepository;
+
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

@@ -1,98 +1,92 @@
 package com.discordclone.api.service.impl;
 
-import com.discordclone.api.model.CreateServerDto;
-import com.discordclone.api.exception.impl.InvalidInputException;
 import com.discordclone.api.entity.Channel;
 import com.discordclone.api.entity.Member;
 import com.discordclone.api.entity.Profile;
 import com.discordclone.api.entity.Server;
-import com.discordclone.api.repository.ChannelRepository;
+import com.discordclone.api.exception.impl.InvalidInputException;
+import com.discordclone.api.model.CreateServerDTO;
+import com.discordclone.api.model.domain.ServerDTO;
+import com.discordclone.api.model.domain.ServerWithMembersAndChannelsDTO;
 import com.discordclone.api.repository.MemberRepository;
 import com.discordclone.api.repository.ProfileRepository;
 import com.discordclone.api.repository.ServerRepository;
 import com.discordclone.api.service.ServerService;
+import com.discordclone.api.util.ChannelType;
+import com.discordclone.api.util.ModelConverter;
+import com.discordclone.api.util.Role;
 import jakarta.transaction.Transactional;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import java.util.*;
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 
 @Service
 public class ServerServiceImpl implements ServerService {
+
+    private final Logger logger = LoggerFactory.getLogger(ServerServiceImpl.class);
     private final ServerRepository serverRepository;
-    private final ProfileServiceImpl profileServiceImpl;
-    private final ChannelRepository channelRepository;
-    private final MemberRepository memberRepository;
     private final ProfileRepository profileRepository;
+
+    private final MemberRepository memberRepository;
 
     public ServerServiceImpl(
             ServerRepository serverRepository,
-            ProfileServiceImpl profileServiceImpl,
-            ChannelRepository channelRepository,
-            MemberRepository memberRepository, ProfileRepository profileRepository
-    ) {
+            ProfileRepository profileRepository,
+            MemberRepository memberRepository) {
         this.serverRepository = serverRepository;
-        this.profileServiceImpl = profileServiceImpl;
-        this.channelRepository = channelRepository;
-        this.memberRepository = memberRepository;
         this.profileRepository = profileRepository;
+        this.memberRepository = memberRepository;
     }
 
     @Override
     @Transactional
-    public Server createServer(CreateServerDto data, UUID profileId) {
-        Profile currentUser = profileServiceImpl.getProfileById(profileId);
-        boolean serverExists = serverRepository.existsByName(data.getServerName());
+    public ServerDTO createServer(CreateServerDTO data, UUID profileId) {
 
+        Profile currentUser = profileRepository.getProfileById(profileId)
+                .orElseThrow(() -> new UsernameNotFoundException("Cannot find the profile with id " + profileId));
+
+        boolean serverExists = serverRepository.existsByName(data.serverName());
         if (serverExists) {
-            throw new InvalidInputException("Invalid serverName", data.getServerName() + "is used", HttpStatus.CONFLICT, "serverName");
+            throw new InvalidInputException(
+                    "Invalid serverName",
+                    data.serverName() + "is used",
+                    HttpStatus.CONFLICT, "serverName"
+            );
         }
 
-        Channel channel = new Channel();
-        Member member = new Member();
+        Server newServer = new Server(data.serverName());
+        newServer.setImageUrl(data.serverImage());
+        newServer.getChannels().add(new Channel("General", ChannelType.TEXT, newServer));
+        newServer.getMembers().add(new Member(Role.OWNER, currentUser, newServer));
+        newServer = serverRepository.save(newServer);
 
-        HashSet<Channel> channels = new HashSet<>();
-        channels.add(channel);
-        HashSet<Member> members = new HashSet<>();
-        members.add(member);
+        logger.debug("Server created {}", newServer);
 
-        Server newServer = new Server()
-                .setImageUrl(data.getServerImage())
-                .setName(data.getServerName())
-                .setInviteCode(UUID.randomUUID())
-                .setChannels(channels)
-                .setMembers(members);
-
-        Channel savedChannel = channelRepository.save(channel);
-        Member savedMember = memberRepository.save(member);
-
-        Server savedServer = serverRepository.save(newServer);
-
-        channelRepository.save(savedChannel);
-        memberRepository.save(savedMember);
-
-        Set<Server> servers = currentUser.getServers();
-        servers.add(newServer);
-
-        currentUser.setServers(servers);
-
-        return savedServer;
+        return ModelConverter.convertToServerDTO(newServer);
     }
 
     @Override
     @Transactional
-    public Server getServerById(UUID id) {
+    public ServerWithMembersAndChannelsDTO getServerById(UUID id) {
+
         if (id == null) {
-            throw new InvalidInputException("Invalid server.id", "server id must be a non-null value", HttpStatus.BAD_REQUEST, "server.id");
+            throw new InvalidInputException(
+                    "Invalid server.id",
+                    "server id must be a non-null value",
+                    HttpStatus.BAD_REQUEST,
+                    "server.id");
         }
 
-        Optional<Server> server = serverRepository.findById(id);
+        Server server = serverRepository.findById(id)
+                .orElseThrow(() -> new UsernameNotFoundException("Cannot find the server with id " + id));
 
-        return server.orElseThrow(() -> new InvalidInputException(
-                "Invalid server.id",
-                "Cannot find a server associated with id " + id,
-                HttpStatus.BAD_REQUEST, "server.id")
-        );
+        return ModelConverter.convertToServerWithMembersAndChannelsDTO(server);
     }
 
     @Override
@@ -110,16 +104,13 @@ public class ServerServiceImpl implements ServerService {
 
     @Override
     @Transactional
-    public Set<Server> getAllServersByProfileId(UUID profileId) {
-        Profile profile = profileRepository.findProfileById(profileId)
-                .orElseThrow(() -> new InvalidInputException(
-                        "Invalid profile.id",
-                        "Cannot find a server associated with id " + profileId,
-                        HttpStatus.BAD_REQUEST,
-                        "profile.id")
-                );
+    public List<ServerDTO> getAllByMemberId(UUID profileId) {
+        List<Member> members = memberRepository.getMemberByProfile_Id(profileId)
+                .orElseThrow(() -> new UsernameNotFoundException("Cannot find the members with id " + profileId));
 
-        return profile.getServers();
+        return members.stream()
+                .map(Member::getServer)
+                .map(ModelConverter::convertToServerDTO)
+                .toList();
     }
-
 }

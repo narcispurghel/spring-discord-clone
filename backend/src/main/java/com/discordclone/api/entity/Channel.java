@@ -16,24 +16,28 @@ public class Channel {
     @Column(name = "channel_name")
     private String channelName = "general";
 
-    @Column
+    @Column(name = "channel_type")
     private ChannelType type = ChannelType.TEXT;
 
+    @ManyToOne(cascade = {CascadeType.ALL})
+    @JoinColumn(name = "server_id")
+    private Server server;
+
     @Column(name = "created_at", updatable = false)
-    private LocalDateTime createdAt;
+    private LocalDateTime createdAt = LocalDateTime.now();;
 
     @Column(name = "updated_at")
-    private LocalDateTime updatedAt;
+    private LocalDateTime updatedAt = LocalDateTime.now();
 
     public Channel() {
-        createdAt = LocalDateTime.now();
+
     }
 
-    public Channel(String channelName, ChannelType type, LocalDateTime updatedAt){
+    public Channel(String channelName, ChannelType type, Server server) {
         this();
         this.channelName = channelName;
         this.type = type;
-        this.updatedAt = updatedAt;
+        this.server = server;
     }
 
     public ChannelType getType() {
@@ -81,4 +85,11 @@ public class Channel {
         return this;
     }
 
+    public Server getServer() {
+        return server;
+    }
+
+    public void setServer(Server server) {
+        this.server = server;
+    }
 }

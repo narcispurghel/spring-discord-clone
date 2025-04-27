@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Socket.IO Chat</title>
+    <script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script>
+</head>
+<body>
+<div id="messages"></div>
+<input type="text" id="username" placeholder="Your username">
+<input type="text" id="messageInput" placeholder="Type a message...">
+<button id="sendButton">Send</button>
+
+<script>
+    class ChatClient {
+        constructor() {
+            this.socket = io('http://localhost:8081');
+            this.messagesDiv = document.getElementById('messages');
+            this.messageInput = document.getElementById('messageInput');
+            this.usernameInput = document.getElementById('username');
+            this.sendButton = document.getElementById('sendButton');
+
+            this.initializeEventListeners();
+        }
+
+        initializeEventListeners() {
+            // Socket events
+            this.socket.on('connect', () => this.appendMessage('Connected to server'));
+            this.socket.on('disconnect', () => this.appendMessage('Disconnected from server'));
+            this.socket.on('/chat/message', (data) => this.appendMessage(`${data.username}: ${data.message}`));
+
+            // DOM events
+            this.sendButton.addEventListener('click', () => this.sendMessage());
+            this.messageInput.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') this.sendMessage();
+            });
+        }
+
+        sendMessage() {
+            if (this.messageInput.value && this.usernameInput.value) {
+                const message = {
+                    message: this.messageInput.value,
+                    username: this.usernameInput.value
+                };
+
+                console.log('Sending message:', message);
+                this.socket.emit('/chat/message', message);
+                this.messageInput.value = '';
+            } else {
+                console.error('Username or message input is empty!');
+            }
+        }
+
+        appendMessage(text) {
+            const messageElement = document.createElement('div');
+            messageElement.textContent = text;
+            this.messagesDiv.appendChild(messageElement);
+            this.messagesDiv.scrollTop = this.messagesDiv.scrollHeight;
+        }
+    }
+
+    // Inițializare când documentul este încărcat
+    document.addEventListener('DOMContentLoaded', () => {
+        new ChatClient();
+    });
+</script>
+
+<style>
+    #messages {
+        height: 300px;
+        overflow-y: auto;
+        border: 1px solid #ccc;
+        margin-bottom: 10px;
+        padding: 10px;
+    }
+    input, button {
+        margin: 5px;
+        padding: 5px;
+    }
+</style>
+</body>
+</html>

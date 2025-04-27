@@ -42,6 +42,7 @@ export class ChatMessagesComponent implements OnChanges, OnDestroy {
   private handleSubscriptions(changes: SimpleChanges): void {
     const previousValue = changes['chatId'].previousValue;
     previousValue && this.unsubscribeEvents(previousValue);
+    console.log('chatId', this.chatId);
     this.chatMessagesService.subscribeMessages(this.addKey());
   }
 

@@ -35,7 +35,7 @@ import { metaReducers } from './store/app-store.reducers';
 import { appReducers } from './store/app.reducer';
 
 const socketConfig: SocketIoConfig = {
-  url: environment.socketUrl,
+  url: 'http://localhost:8081',
   options: { withCredentials: true }
 };
 

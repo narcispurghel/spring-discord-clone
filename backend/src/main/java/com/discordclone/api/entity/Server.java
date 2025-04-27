@@ -3,27 +3,26 @@ package com.discordclone.api.entity;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
-@Table(name = "servers")
 @Entity
+@Table(name = "servers")
 public class Server {
-
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(unique = true)
+    @GeneratedValue(strategy = GenerationType.UUID)
+    @Column(unique = true, nullable = false)
     private UUID id;
 
-    @Column(unique = true, length = 100, name = "server_name")
+    @Column(unique = true, length = 100, name = "server_name", nullable = false)
     private String name;
 
     @Column(name = "image_url")
     private String imageUrl;
 
-    @Column(nullable = false, name = "invite_code")
-    private UUID inviteCode;
+    @Column(nullable = false, name = "invite_code", unique = true)
+    private UUID inviteCode = UUID.randomUUID();
 
     @Column(updatable = false, name = "created_at")
     private LocalDateTime createdAt = LocalDateTime.now();
@@ -31,82 +30,89 @@ public class Server {
     @Column(name = "updated_at")
     private LocalDateTime updatedAt = LocalDateTime.now();
 
-    @OneToMany
-    private Set<Channel> channels = new HashSet<>();
+    @OneToMany(mappedBy = "server", orphanRemoval = true, cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<Member> members = new ArrayList<>();
 
-    @OneToMany
-    private Set<Member> members = new HashSet<>();
+    @OneToMany(mappedBy = "server", orphanRemoval = true, cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<Channel> channels = new ArrayList<>();
+
+    public Server() {
+    }
+
+    public Server(String name) {
+        this.name = name;
+    }
+
+    public Server(String name, String imageUrl, UUID inviteCode, LocalDateTime updatedAt, List<Member> members, List<Channel> channels) {
+        this.name = name;
+        this.imageUrl = imageUrl;
+        this.inviteCode = inviteCode;
+        this.updatedAt = updatedAt;
+        this.members = members;
+        this.channels = channels;
+    }
 
     public UUID getId() {
         return id;
     }
 
-    public Server setId(UUID id) {
+    public void setId(UUID id) {
         this.id = id;
-        return this;
     }
 
     public String getName() {
         return name;
     }
 
-    public Server setName(String name) {
+    public void setName(String name) {
         this.name = name;
-        return this;
-    }
-
-    public UUID getInviteCode() {
-        return inviteCode;
-    }
-
-    public Server setInviteCode(UUID inviteCode) {
-        this.inviteCode = inviteCode;
-        return this;
     }
 
     public String getImageUrl() {
         return imageUrl;
     }
 
-    public Server setImageUrl(String imageUrl) {
+    public void setImageUrl(String imageUrl) {
         this.imageUrl = imageUrl;
-        return this;
+    }
+
+    public UUID getInviteCode() {
+        return inviteCode;
+    }
+
+    public void setInviteCode(UUID inviteCode) {
+        this.inviteCode = inviteCode;
     }
 
     public LocalDateTime getCreatedAt() {
         return createdAt;
     }
 
-    public Server setCreatedAt(LocalDateTime createdAt) {
+    public void setCreatedAt(LocalDateTime createdAt) {
         this.createdAt = createdAt;
-        return this;
     }
 
     public LocalDateTime getUpdatedAt() {
         return updatedAt;
     }
 
-    public Server setUpdatedAt(LocalDateTime updatedAt) {
+    public void setUpdatedAt(LocalDateTime updatedAt) {
         this.updatedAt = updatedAt;
-        return this;
     }
 
-    public Set<Member> getMembers() {
+    public List<Member> getMembers() {
         return members;
     }
 
-    public Server setMembers(Set<Member> members) {
+    public void setMembers(List<Member> members) {
         this.members = members;
-        return this;
     }
 
-    public Set<Channel> getChannels() {
+    public List<Channel> getChannels() {
         return channels;
     }
 
-    public Server setChannels(Set<Channel> channels) {
+    public void setChannels(List<Channel> channels) {
         this.channels = channels;
-        return this;
     }
-
 }

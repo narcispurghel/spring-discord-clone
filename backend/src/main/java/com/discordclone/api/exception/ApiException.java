@@ -7,7 +7,8 @@ public abstract class ApiException extends RuntimeException {
     private final String path;
     private final HttpStatusCode httpStatusCode;
 
-    protected ApiException(String message, String description, HttpStatusCode httpStatusCode, String path) {
+    protected ApiException(
+            String message, String description, HttpStatusCode httpStatusCode, String path) {
         super(message);
         if (path == null) {
             path = "";

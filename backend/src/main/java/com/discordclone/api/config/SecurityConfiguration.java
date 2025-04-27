@@ -2,6 +2,9 @@ package com.discordclone.api.config;
 
 import com.discordclone.api.security.JwtAuthenticationFilter;
 import com.discordclone.api.security.UserDetailsService;
+
+import java.util.List;
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -21,42 +24,41 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
-import java.util.List;
-
 @Configuration
 @EnableWebSecurity
 public class SecurityConfiguration {
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
     private final UserDetailsService userDetailsService;
 
-    public SecurityConfiguration
-            (JwtAuthenticationFilter jwtAuthenticationFilter,
-             UserDetailsService userDetailsService)
-    {
+    public SecurityConfiguration(
+            JwtAuthenticationFilter jwtAuthenticationFilter, UserDetailsService userDetailsService) {
         this.jwtAuthenticationFilter = jwtAuthenticationFilter;
         this.userDetailsService = userDetailsService;
     }
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        return http
-                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
+        return http.cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(
-                        authorize -> authorize
-                                .requestMatchers(HttpMethod.OPTIONS,"/**").permitAll()
-                                .requestMatchers("/api/auth/**").permitAll()
-                                .requestMatchers("/socket.io/**").permitAll()
-                                .requestMatchers(SWAGGER_PATHS).permitAll()
-                                .anyRequest().authenticated())
+                        authorize ->
+                                authorize
+                                        .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+                                        .requestMatchers("/api/auth/**").permitAll()
+                                        .requestMatchers("/socket.io/**").permitAll()
+                                        .requestMatchers(swaggerEndpoints).permitAll()
+                                        .anyRequest().permitAll()
+                )
                 .formLogin(AbstractHttpConfigurer::disable)
                 .httpBasic(AbstractHttpConfigurer::disable)
-                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .sessionManagement(
+                        session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                )
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
     }
 
-    private final String[] SWAGGER_PATHS = {
+    private final String[] swaggerEndpoints = {
             "/v3/api-docs.yaml",
             "/v3/api-docs/**",
             "/swagger-resources/**",
@@ -74,7 +76,8 @@ public class SecurityConfiguration {
     }
 
     @Bean
-    public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception {
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration)
+            throws Exception {
         return configuration.getAuthenticationManager();
     }
 
@@ -88,7 +91,7 @@ public class SecurityConfiguration {
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.setAllowedOrigins(List.of("http://localhost:4200"));
         configuration.setAllowedHeaders(List.of("*"));
-        configuration.setAllowedMethods(List.of("GET","POST","PUT","PATCH","DELETE","OPTIONS"));
+        configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
         configuration.setAllowCredentials(true);
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);

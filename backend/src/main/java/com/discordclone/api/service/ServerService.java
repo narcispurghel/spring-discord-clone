@@ -1,14 +1,18 @@
 package com.discordclone.api.service;
 
-import com.discordclone.api.model.CreateServerDto;
-import com.discordclone.api.entity.Server;
+import com.discordclone.api.model.CreateServerDTO;
+import com.discordclone.api.model.domain.ServerDTO;
+import com.discordclone.api.model.domain.ServerWithMembersAndChannelsDTO;
 
-import java.util.Set;
+import java.util.List;
 import java.util.UUID;
 
 public interface ServerService {
-    Server createServer(CreateServerDto createServerDto, UUID profileId);
-    Server getServerById(UUID id);
+    ServerDTO createServer(CreateServerDTO createServerDto, UUID profileId);
+
+    ServerWithMembersAndChannelsDTO getServerById(UUID id);
+
     boolean deleteServerById(UUID id);
-    Set<Server> getAllServersByProfileId(UUID profileId);
+
+    List<ServerDTO> getAllByMemberId(UUID memberId);
 }
